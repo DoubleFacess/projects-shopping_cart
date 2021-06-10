@@ -56,11 +56,10 @@
 import { v4 as uuidv4 } from 'uuid';
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 
-export default {
-  itemps: ['cat'],
+export default {  
   data: function () {
-    return {
-      item: {},
+    return {      
+      test: null,
       breadcrums: [
         {
           text: 'Home',
@@ -166,20 +165,29 @@ export default {
     }
   },
   computed: {
-    cats() {
-      return this.$store.state.items;
-    }
+    cats() {      
+      return this.$store.state.items
+    }    
   },
   created() {
-    this.$store.dispatch('getItems');
+    this.$store.dispatch('getItems')    
+  },
+  mounted: function() {    
   },
   methods: {
-    my_method: function() {
-      this.$root.$emit('edit', cat)
-      alert('action')
-    },
+     _numberObjs: function (obj) {
+      let x = Object.keys(obj).length
+      this.number_items = x
+      return this.number_items
+    },    
     async save(item) {
-      await this.$store.dispatch('saveItem', item);
+      if(this._numberObjs(this.cats) > 0) {
+        console.log('items array not empty')
+      } else {
+        console.log('items array empty')
+      }
+      //console.log(this._numberObjs(this.cats))
+      await this.$store.dispatch('saveItem', item)
       console.log('back');
       //this.$router.push('/');
     }

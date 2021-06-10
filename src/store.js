@@ -9,6 +9,9 @@ export default new Vuex.Store({
   state: {
     items:[]
   },
+  getters: {
+    Items: state => state.items,
+  },
   mutations: {
 
   },
@@ -19,10 +22,10 @@ export default new Vuex.Store({
     },
     async getItems(context) {
       context.state.items = [];
-      let items = await idb.getItems();
+      let items = await idb.getItems()
       items.forEach(c => {
-        context.state.items.push(c);
-      });
+        context.state.items.push(c)
+      })
     },
     async saveItem(context, cat) {
       await idb.saveItem(cat);

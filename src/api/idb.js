@@ -32,8 +32,7 @@ export default {
 			let trans = db.transaction(['cats'],'readwrite')
 			trans.oncomplete = () => {
 				resolve()
-			};
-
+			}
 			let store = trans.objectStore('cats')
 			store.delete(cat.id)
 		})

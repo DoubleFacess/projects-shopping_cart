@@ -6,9 +6,8 @@ export default {
 	async getDb() {
 		return new Promise((resolve, reject) => {
 			if(DB) { return resolve(DB); }
-			console.log('OPENING DB', DB);
-			let request = window.indexedDB.open(DB_NAME, DB_VERSION)
-			
+			console.log('OPENING DB', DB)
+			let request = window.indexedDB.open(DB_NAME, DB_VERSION)			
 			request.onerror = e => {
 				console.log('Error opening db', e)
 				reject('Error')
@@ -18,18 +17,19 @@ export default {
 				resolve(DB)
 			}			
 			request.onupgradeneeded = e => {
-				console.log('onupgradeneeded');
-				let db = e.target.result;
-				db.createObjectStore("cats", { autoIncrement: true, keyPath:'_id' })
+				console.log('onupgradeneeded')
+				let db = e.target.result
+				let objectStore = db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
+				//db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
+				objectStore.createIndex('name', 'name', { unique: false})
+				objectStore.createIndex('uid', 'uid', { unique: false})
 			}
 		})
 	},
 	async deleteItem(cat) {
 		let db = await this.getDb()
-
 		return new Promise(resolve => {
-
-			let trans = db.transaction(['cats'],'readwrite');
+			let trans = db.transaction(['cats'],'readwrite')
 			trans.oncomplete = () => {
 				resolve()
 			};

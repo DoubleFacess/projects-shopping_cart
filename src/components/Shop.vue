@@ -191,9 +191,10 @@ export default {
     this.$store.dispatch('removeAll')    
   },
   methods: {
-    filterData: function() {
-      this.tableData = this.tableData.filter(i => {
-        if(i.name == x.name || x.name == '') {
+    filterData: function(obj) {
+      this.cats.filter(i => {
+        if(i.id == obj.id || obj.id == '') {
+          console.log('filter data')
           console.log(i)
           return i
         } else {
@@ -210,26 +211,19 @@ export default {
       if(this._numberObjs(this.cats) > 0) {
         console.log('items array not empty')
         let uid = this.$store.state.items[0].uid
-        this.$store.dispatch('getItem', {'id': item.id})
-        if(this.temp > 0) {
+        if(this.cats.some(x => x.id === item.id)) {
           console.log('item is already in the shopping cart')
+          let _qty = item.qty++
+          let myItem = {
+            _id: item._id,
+            name: item.name,
+            price: item.price,
+            uid: item.uid,
+            qty: _qty
+          }
         } else {
           console.log('item is new')
         }
-        //console.log(test)
-        /*if(this._numberObjs() > 0) {
-          console.log('item is already in the shopping cart')
-        }*/
-        /*
-        await this.$store.dispatch('saveItem', {
-          'uid': uid, 
-          'id': item.id,
-          'name': item.name,
-          'price': item.price
-          
-        })
-        this.$store.dispatch('getItems')
-        */
       } else {
         console.log('items array empty')
         let uid = uuidv4()

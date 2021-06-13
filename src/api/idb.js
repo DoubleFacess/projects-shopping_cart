@@ -72,12 +72,23 @@ export default {
 	async removeAll () {
 		let db = await this.getDb()
 		return new Promise(resolve => {
-			let trans = db.transaction(['cats'],'readwrite');
+			let trans = db.transaction(['cats'],'readwrite')
 			trans.oncomplete = () => {
 				resolve()
 			}
 			let store = trans.objectStore('cats')
 			store.clear()
+		})
+	},
+	async update (item) {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['cats'],'readwrite')
+			trans.oncomplete = () => {
+				resolve('success')
+			}
+			let store = trans.objectStore('cats')
+			store.put(item, item._id)
 		})
 	}
 

@@ -44,6 +44,7 @@
                   <td class="text-center">${{i[0].price}}</td>
                   <td class="text-center">
                     <v-text-field
+                      id="yes"
                       class="pt-10"
                       label="Outlined"
                       style="width: 70px;"
@@ -51,7 +52,7 @@
                       outlined
                       :value="_numberObjs(i)"
                       type="number"
-                      @onchange="test()"
+                      v-on:click="greet"
                     ></v-text-field>
                   </td>
                   <td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>
@@ -88,7 +89,10 @@
             </template>
           </v-simple-table>
           <div class="text-center">
-            <v-btn class="primary white--text mt-5" outlined>PROCEED TO PAY</v-btn>
+            <v-btn class="primary white--text mt-5" outlined>PROCEED</v-btn>
+          </div>
+           <div class="text-center">
+            <v-btn class="red white--text mt-5" outlined @onclick="deleteAll()">DELETE </v-btn>
           </div>
         </v-col>
       </v-row>
@@ -102,8 +106,10 @@ import Cat from '@/components/Cat';
 export default {  
   data: function() {    
     return {
+      foo: 0,
       my_obj : null,
       number_items: null,
+      test: null,
       total: 0,
       breadcrums: [
         {
@@ -128,14 +134,28 @@ export default {
     console.log('start')
     this.$store.dispatch('getItems');
   },
+  mounted: function() {
+    
+  },
   computed: {
     cats() {
-      let a = this.$store.state.items
-      this._function(a)
-      return this.$store.state.items;
+      let my_obj = this.$store.state.items
+      this._function(my_obj)
+      return my_obj = this.my_obj
     }    
   },  
   methods: {
+    greet: function (event) {
+      // `this` inside methods points to the Vue instance
+      alert('Hello ' + this.name + '!')
+      // `event` is the native DOM event
+      if (event) {
+        alert(event.target.value)
+      }
+    },
+    deleteAll: function() {
+      return this.$store.dispatch('deleteAll')
+    },
     _function: function(obj) {
       let test = obj.reduce(function (r, a) {
         r[a.id] = r[a.id] || []

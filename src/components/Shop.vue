@@ -161,21 +161,47 @@ export default {
           price:'25.00',
           src:require('../assets/imgs/12.jpg')
         }
-      ]
+      ],
+      temp: false
     }
   },
   computed: {
     cats() {      
       return this.$store.state.items
-    }    
+    },
+    /*
+    getItems() {
+      return this.$store.getters.getItems
+    }
+    */
   },
   created() {
-    this.$store.dispatch('getItems')    
+    this.$store.subscribeAction((action, state) => {
+      if (action.type === 'saveItem') {
+        this.$store.dispatch('getItems')
+      }   
+    }) 
+    this.$store.subscribeAction((action, state) => {
+      if (action.type === 'getItem') {
+        this.temp = true
+      }   
+    })
   },
-  mounted: function() {    
+  mounted: function() {
+    this.$store.dispatch('removeAll')    
   },
   methods: {
-     _numberObjs: function (obj) {
+    filterData: function() {
+      this.tableData = this.tableData.filter(i => {
+        if(i.name == x.name || x.name == '') {
+          console.log(i)
+          return i
+        } else {
+          console.log('no items found')
+        }
+      })
+    },
+    _numberObjs: function (obj) {
       let x = Object.keys(obj).length
       this.number_items = x
       return this.number_items
@@ -183,13 +209,40 @@ export default {
     async save(item) {
       if(this._numberObjs(this.cats) > 0) {
         console.log('items array not empty')
+        let uid = this.$store.state.items[0].uid
+        this.$store.dispatch('getItem', {'id': item.id})
+        if(this.temp > 0) {
+          console.log('item is already in the shopping cart')
+        } else {
+          console.log('item is new')
+        }
+        //console.log(test)
+        /*if(this._numberObjs() > 0) {
+          console.log('item is already in the shopping cart')
+        }*/
+        /*
+        await this.$store.dispatch('saveItem', {
+          'uid': uid, 
+          'id': item.id,
+          'name': item.name,
+          'price': item.price
+          
+        })
+        this.$store.dispatch('getItems')
+        */
       } else {
         console.log('items array empty')
+        let uid = uuidv4()
+        await this.$store.dispatch('saveItem', {
+          'uid': uid, 
+          'id': item.id,
+          'name': item.name,
+          'price': item.price,
+          'qty' : 1
+        })
+        this.$store.dispatch('getItems')
       }
-      //console.log(this._numberObjs(this.cats))
-      await this.$store.dispatch('saveItem', item)
-      console.log('back');
-      //this.$router.push('/');
+      console.log('operation completed')
     }
   }
 }

@@ -5,7 +5,9 @@ let DB
 export default {
 	async getDb() {
 		return new Promise((resolve, reject) => {
-			if(DB) { return resolve(DB); }
+			if(DB) { 
+				return resolve(DB); 
+			}
 			console.log('OPENING DB', DB)
 			let request = window.indexedDB.open(DB_NAME, DB_VERSION)			
 			request.onerror = e => {
@@ -21,7 +23,7 @@ export default {
 				let db = e.target.result
 				let objectStore = db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
 				//db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
-				objectStore.createIndex('name', 'name', { unique: false})
+				objectStore.createIndex('id', 'id', { unique: false})
 				objectStore.createIndex('uid', 'uid', { unique: false})
 			}
 		})
@@ -66,6 +68,17 @@ export default {
 			let store = trans.objectStore('cats')
 			store.put(cat)
 		})	
+	},
+	async removeAll () {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['cats'],'readwrite');
+			trans.oncomplete = () => {
+				resolve()
+			}
+			let store = trans.objectStore('cats')
+			store.clear()
+		})
 	}
 
 }

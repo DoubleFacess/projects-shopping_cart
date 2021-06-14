@@ -50,6 +50,9 @@ export default {
   }),
   created () {
     this.$vuetify.theme.dark = true
+    this.$root.$on('test', ()=> {
+      alert('yeahhhhhh')
+    })
   }
 };
 </script>

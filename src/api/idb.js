@@ -81,15 +81,42 @@ export default {
 		})
 	},
 	async update (item) {
+		console.log(item)
 		let db = await this.getDb()
 		return new Promise(resolve => {
 			let trans = db.transaction(['cats'],'readwrite')
 			trans.oncomplete = () => {
 				resolve('success')
+				//resolve()
 			}
 			let store = trans.objectStore('cats')
-			store.put(item, item._id)
-		})
+			store.openCursor().onsuccess = e => {
+				let cursor = e.target.result
+				if(cursor) {
+					//console.log('controllo: cursor exists')
+					//console.log('controllo: cursor id value')
+					//console.log(cursor.value._id)
+					//console.log('controllo: item id')
+					//console.log(item._id)
+					if (cursor.value._id === item._id) {
+						//console.log('cursor id = item id')
+						let updateData = {}
+						updateData._id = item._id
+						updateData.name = item.name
+						updateData.price = item.price
+						updateData.uid = item.uid
+						updateData.qty = item.qty
+						//console.log(updateData)
+						const request = cursor.update(item)
+						request.onsuccess = function() {
+							console.log('data updated')
+						}					
+					}
+					cursor.continue()
+				}
+					
+			}
+		})		
 	}
 
 }

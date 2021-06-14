@@ -39,6 +39,11 @@ export default new Vuex.Store({
     async removeAll(context) {
       await idb.removeAll()
       return context.state.items = []
+    },
+    async update(context, payload) {
+      await idb.update(payload)
+      context.state.items = []
+      //this.$store.dispatch('getItems')
     }
   }
 })

@@ -50,12 +50,13 @@
                       style="width: 70px;"
                       single-line
                       outlined
-                      :value="_numberObjs(i)"
+                      :value="i[0].qty"
                       type="number"
                       v-on:click="greet"
                     ></v-text-field>
                   </td>
-                  <td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>
+                  <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
+                  <td class="text-center">${{ i[0].qty *  i[0].price }}</td>
                   <td class="text-center"><a>X</a></td>
                 </tr>              
               </tbody>
@@ -147,10 +148,11 @@ export default {
   methods: {
     greet: function (event) {
       // `this` inside methods points to the Vue instance
-      alert('Hello ' + this.name + '!')
+      //alert('Hello ' + this.name + '!')
       // `event` is the native DOM event
       if (event) {
         alert(event.target.value)
+        this.$root.$emit('test')
       }
     },
     deleteAll: function() {

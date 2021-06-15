@@ -232,6 +232,9 @@ export default {
     }
   },  
   methods: {
+    test: function() {
+      alert('ok')
+    },
     greet: function (x) {
       console.log(event)
       console.log(event.target)

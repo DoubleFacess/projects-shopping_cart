@@ -1,4 +1,4 @@
-<template>
+<template v-slot:activator="{ on, attrs }">
   <div>
     <v-container>
       <v-breadcrumbs class="pb-0" :items="breadcrums"></v-breadcrumbs>
@@ -52,11 +52,11 @@
                       outlined
                       :value="i[0].qty"
                       type="number"
-                      v-on:click="greet"
+                      v-on:click="greet(i[0])"
                     ></v-text-field>
                   </td>
                   <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
-                  <td class="text-center">${{ i[0].qty *  i[0].price }}</td>
+                  <td class="text-center">$<span class="subtotal">{{ i[0].qty *  i[0].price }}</span></td>
                   <td class="text-center" ><a @click="deleteItem(i[0])">X</a></td>
                 </tr>              
               </tbody>
@@ -84,13 +84,100 @@
               </tr>
               <tr>
                 <td>Total</td>
-                <td class="text-right" style="width: 50px;" id="total"><b>${{ 10 + 5 + _totalAmount(cats, 'price')}}</b></td>
+                <td class="text-right" style="width: 50px;" id="sub-total">${{ 15 + _totalAmount(cats, 'price')}}</td>
               </tr>
               </tbody>
             </template>
           </v-simple-table>
           <div class="text-center">
-            <v-btn class="primary white--text mt-5" outlined>PROCEED</v-btn>
+            <v-divider></v-divider>
+            <v-dialog
+              transition="dialog-bottom-transition"
+              fullscreen
+              hide-overlay
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="primary"
+                  v-bind="attrs"
+                  v-on="on"
+                >Proceed</v-btn>
+              </template>
+              <template v-slot:default="dialog">
+                <v-card>
+                  <v-toolbar
+                    color="primary"
+                    dark
+                  >Opening from the bottom</v-toolbar>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          label="Legal first name*"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          label="Legal last name*"
+                          hint="example of persistent helper text"
+                          persistent-hint
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Email*"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <p>Order ID: 46767876781232gge</p>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="12" md="9" sm="12" >
+                        <v-simple-table>
+                          <template v-slot:default>
+                            <thead>
+                              <tr>
+                                <th class="text-center">ITEM</th>
+                                <th class="text-center">PRICE</th>
+                                <th >QUANTITY</th>
+                                <th class="text-center">TOTAL</th>              
+                              </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                          </template>
+                        </v-simple-table>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <v-card-actions class="justify-end">
+                    <v-btn
+                      text
+                      @click="dialog.value = false"
+                    >Continue</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
           </div>
            <div class="text-center">
             <v-btn class="red white--text mt-5" outlined @click="deleteAll()">DELETE </v-btn>
@@ -105,11 +192,9 @@ import Cat from '@/components/Cat';
 export default {  
   data: function() {    
     return {
-      foo: 0,
+      dialog: false,
       my_obj : null,
       number_items: null,
-      test: null,
-      total: 0,
       breadcrums: [
         {
           text: 'Home',
@@ -141,16 +226,19 @@ export default {
       let my_obj = this.$store.state.items
       this._function(my_obj)
       return my_obj = this.my_obj
-    }    
+    },
+    totalAmount(array, column) {
+      this._totalAmount(array, column)
+    }
   },  
   methods: {
-    greet: function (event) {
-      // `this` inside methods points to the Vue instance
-      //alert('Hello ' + this.name + '!')
-      // `event` is the native DOM event
+    greet: function (x) {
+      console.log(event)
+      console.log(event.target)
       if (event) {
         alert(event.target.value)
-        this.$root.$emit('test')
+        x.qty = event.target.value
+        this.$root.$emit('update', x)
       }
     },
     deleteItem: function(i) {
@@ -177,12 +265,16 @@ export default {
       this.number_items = x
       return this.number_items
     },
-    _totalAmount: function(array, column) {
-      if(array.lenght > 0) {
-        let values = array.map((item) => parseInt(item[column]) || 0)
-        return values.reduce((a, b) => a + b)
+    _totalAmount: function() {
+      let test = document.getElementsByClassName('subtotal')
+      let sum = 0
+      var arrayLength = test.length
+      for (var i = 0; i < test.length; i++) {
+        sum +=  new Number(test[i].innerHTML)
       }
-    }    
+      //console.log(sum)
+      return sum
+    }
   }
 }
 </script>

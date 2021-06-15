@@ -77,6 +77,10 @@ export default {
         return this.cats
       }   
     })
+    this.$root.$on('update', (payload) => {
+      this.$store.dispatch('update', payload)
+      this.$store.dispatch('getItems')
+    })
   },
   methods: {
     _numberObjs: function (obj) {

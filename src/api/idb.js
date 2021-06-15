@@ -22,6 +22,7 @@ export default {
 				console.log('onupgradeneeded')
 				let db = e.target.result
 				let objectStore = db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
+				let newObjectStore = db.createObjectStore("orders", { autoIncrement: true, keyPath: 'id' })
 				//db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
 				objectStore.createIndex('id', 'id', { unique: false})
 				objectStore.createIndex('uid', 'uid', { unique: false})

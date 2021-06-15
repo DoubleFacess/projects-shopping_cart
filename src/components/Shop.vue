@@ -38,7 +38,7 @@
                 </v-card-text>
                 <v-card-actions class="justify-end">
                   <v-btn color="primary" @click="$emit('add', item)">Delete</v-btn>
-                  <v-btn color="secondary" @click="save(item)">Edit</v-btn>
+                  <v-btn color="secondary" @click="save(item)">Add to Cart</v-btn>
                   <!--
                   <v-btn color="secondary" @click="my_method('edit', item)">Edit</v-btn>
                   -->
@@ -182,9 +182,6 @@ export default {
         return this.cats
       }   
     })
-    this.$root.$on('test', ()=> {
-      alert('yeahhhhhh')
-    })
     /*
     this.$store.subscribeAction((action, state) => {
       if (action.type === 'update') {
@@ -202,6 +199,10 @@ export default {
     //this.$store.dispatch('removeAll')    
   },
   methods: {
+    save: function(item) {
+      this.$root.$emit('save', item)
+    }
+    /*
     _numberObjs: function (obj) {
       let x = Object.keys(obj).length
       this.number_items = x
@@ -285,6 +286,7 @@ export default {
         break
       }      
     }
+    */
   }
 }
 </script>

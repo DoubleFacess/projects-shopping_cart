@@ -31,12 +31,19 @@ export default {
 	async deleteItem(cat) {
 		let db = await this.getDb()
 		return new Promise(resolve => {
+			let empty = []
 			let trans = db.transaction(['cats'],'readwrite')
 			trans.oncomplete = () => {
-				resolve()
+				resolve(empty)
 			}
 			let store = trans.objectStore('cats')
-			store.delete(cat.id)
+			store.openCursor().onsuccess = e => {
+				let cursor = e.target.result
+				if (cursor) {
+					store.delete(cursor.value)
+					cursor.continue()
+				}
+			}
 		})
 	},
 	async getItems() {
@@ -117,6 +124,31 @@ export default {
 					
 			}
 		})		
+	},
+	async deleteData(x) {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let transaction = db.transaction(['cats'],'readwrite')
+			transaction.oncomplete = () => {
+				resolve('Transaction completed')
+				//resolve()
+			}
+			transaction.onerror = function(event) {
+				console.log(transaction.error)
+			}
+			let store = transaction.objectStore('cats')	  
+			// create an object store on the transaction
+			var objectStore = transaction.objectStore("cats")		
+			// Make a request to delete the specified record out of the object store
+			var objectStoreRequest = objectStore.delete(x)
+		
+			objectStoreRequest.onsuccess = function(event) {
+				console.log('report the success of our request')
+			}
+			objectStoreRequest.onerror = function(event) {
+				console.log(transaction.error)
+			}
+		})
 	}
 
 }

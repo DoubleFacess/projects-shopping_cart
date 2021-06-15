@@ -23,7 +23,7 @@
                   <th class="text-center">PRICE</th>
                   <th >QUANTITY</th>
                   <th class="text-center">TOTAL</th>
-                  <th class="text-center">ACTION</th>                
+                  <th >ACTION</th>                
                 </tr>
               </thead>
               <tbody>
@@ -57,7 +57,10 @@
                   </td>
                   <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
                   <td class="text-center">${{ i[0].qty *  i[0].price }}</td>
-                  <td class="text-center" ><a @click="deleteItem(i[0])">X</a></td>
+                  <v-btn class="red white--text mt-10" onclick="greet(i)"> X </v-btn>
+                  <!--
+                  <td class="text-center"><a :href="deleteItem(i)">X</a></td>
+                  -->
                 </tr>              
               </tbody>
             </template>
@@ -93,7 +96,7 @@
             <v-btn class="primary white--text mt-5" outlined>PROCEED</v-btn>
           </div>
            <div class="text-center">
-            <v-btn class="red white--text mt-5" outlined @click="deleteAll()">DELETE </v-btn>
+            <v-btn class="red white--text mt-5" outlined v-on:onclick="deleteAll()">DELETE </v-btn>
           </div>
         </v-col>
       </v-row>
@@ -140,6 +143,7 @@ export default {
     cats() {
       let my_obj = this.$store.state.items
       this._function(my_obj)
+      console.log('im alive')
       return my_obj = this.my_obj
     }    
   },  
@@ -151,26 +155,22 @@ export default {
       if (event) {
         alert(event.target.value)
         this.$root.$emit('test')
-      }
+      } else console.log('yes')
+    },
+    deleteAll: function() {
+      return this.$store.dispatch('deleteAll')
     },
     deleteItem: function(i) {
       console.log('test')
-      return this.$store.dispatch('deleteItem', i)
-    },
-    deleteAll: function() {
-      console.log('im alive')
-      return this.$store.dispatch('deleteAll')
+      //return this.$store.dispatch('deleteItem', i)
     },
     _function: function(obj) {
       let test = obj.reduce(function (r, a) {
         r[a.id] = r[a.id] || []
         r[a.id].push(a)
-        console.log('im alive')
-        //this.greet()
         return r
-        
       }, this.my_obj = Object.create(null))
-      
+      console.log(test)      
     },   
     _numberObjs: function (obj) {
       let x = Object.keys(obj).length

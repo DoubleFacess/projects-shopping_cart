@@ -1,52 +1,22 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
-      app
-      color="primary"
-      dark
-    >
-      <v-toolbar-title class="headline text-uppercase">
-        <span>SHOPPING</span>
-        <span class="font-weight-light">DB</span>
-      </v-toolbar-title>      
-      <v-spacer />
-      <v-btn icon>
-        <v-icon>mdi-account-circle</v-icon></router-link>
-      </v-btn>
-      <v-btn  v-on="on" icon>
-        <v-badge
-          content="2"
-          value="2"
-          color="green"
-          overlap
-        >
-          <v-icon>mdi-bell</v-icon>
-        </v-badge>
-      </v-btn>
-      <v-btn v-on="on" href="/cart" icon>
-        <v-badge
-          content="2"
-          value="2"
-          color="green"
-          overlap
-        >
-          <v-icon>mdi-cart</v-icon>
-        </v-badge>
-      </v-btn>
-    </v-app-bar>
-    <v-content>
+    <v-main>
+      <bar />
       <router-view />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid'
+import bar from './components/Bar.vue'
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 
 export default {
   name: 'App',
+  components: {
+    bar
+  },
   data: () => ({
     on: '',
     foo: 0,

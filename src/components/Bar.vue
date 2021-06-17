@@ -20,7 +20,7 @@
                     color="red"
                     overlap
                 >
-                    <span slot="badge">{{notifications}}</span>
+                    <span slot="badge">{{ notifications }}</span>
                     <v-icon>mdi-bell</v-icon>
                 </v-badge>
             </v-btn>
@@ -35,7 +35,7 @@
                     color="red"
                     overlap
                 >
-                    <span slot="badge">{{notifications}}</span>
+                    <span slot="badge">{{ sum(this.cats, 'qty' )}}</span>
                     <v-icon>mdi-cart</v-icon>
                 </v-badge>
             </v-btn>
@@ -49,7 +49,31 @@ export default{
     data: function() {    
         return {
             notifications: 2,
+            new_items: 0,
             on: ''
+        }
+    },
+    computed: {
+        cats() {      
+            return this.$store.state.items
+        }
+    },
+    created: function() {
+        console.log(this.sum(this.cats, 'qty'))
+        this.$store.subscribeAction((action, state) => {
+            if (action.type === 'saveItem') {
+                console.log('item changed')
+                this.$store.dispatch('getItems')
+            }
+        })
+    },
+
+    methods: {
+        sum: function(_array, key) {
+            return _array.reduce((a, b) => a + (b[key] || 0), 0)
+        },
+        my_sum: function() {
+            return this.sum(this.cats, 'qty' )
         }
     }
 }

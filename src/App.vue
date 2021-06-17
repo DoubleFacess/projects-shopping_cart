@@ -1,9 +1,9 @@
 <template>
   <v-app id="inspire">
-    <v-main>
+    <v-content>
       <bar />
       <router-view />
-    </v-main>
+    </v-content>
   </v-app>
 </template>
 
@@ -25,11 +25,6 @@ export default {
     cats() {      
       return this.$store.state.items
     }
-    /*
-    getItems() {
-      return this.$store.getters.getItems
-    }
-    */
   },
   created () {
     this.$vuetify.theme.dark = true
@@ -66,6 +61,7 @@ export default {
         case 0:          
           console.log('items array empty')
           let uid = uuidv4()
+          this.$root.$emit('uid', uid)
           await this.$store.dispatch('saveItem', {
             'uid': uid, 
             'id': item.id,

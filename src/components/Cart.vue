@@ -116,7 +116,7 @@
                   <v-toolbar
                     color="primary"
                     dark
-                  >Opening from the bottom</v-toolbar>
+                  >Shipping Order Form</v-toolbar>
                   <v-container>
                     <v-row>
                       <v-col
@@ -201,7 +201,7 @@
                     <v-divider></v-divider>
                     <br><br>
                     <v-row>
-                      <v-col :cols="2" md="2" sm="12" offset="8" class="primary">Order ID: {{orderID}}</v-col>
+                      <v-col :cols="2" md="2" sm="12" offset="8" class="primary">Order ID: </v-col>
                     </v-row>
                     <v-row>
                       <v-col :cols="2" md="2" sm="12" offset="8">Subtotal: ${{ _totalAmount(cats, 'price')}}</v-col>
@@ -227,6 +227,7 @@
                               dark
                               v-bind="attrs"
                               v-on="on"
+                              @click="process()"
                             >
                               Click Me
                             </v-btn>
@@ -238,7 +239,7 @@
                             </v-card-title>
 
                             <v-card-text><br>
-                              Thanks <b>{{name}} {{surname}}</b>, a receipt of your order will be sent to your email <b>{{ email }}</b>
+                              Thanks <b>{{name}} {{surname}}</b>, a receipt of your order {{ orderID }} will be sent to your email <b>{{ email }}</b>
                             </v-card-text>
 
                             <v-divider></v-divider>
@@ -278,7 +279,7 @@ export default {
       dialog: false,
       dialog2: false,
       name: '',
-      orderID: null,
+      orderID: [],
       surname: '',
       email: '',
       my_obj : null,
@@ -307,26 +308,44 @@ export default {
     this.$store.dispatch('getItems')
   },
   mounted: function() {
-    
+    this.$root.$on('uid', (uid)=>{
+      this.orderID = uid
+    }) 
   },
   computed: {
     cats() {
       let my_obj = this.$store.state.items
+      //console.log(my_obj.lenght)
       this._function(my_obj)
       return my_obj = this.my_obj
     },
     totalAmount(array, column) {
       this._totalAmount(array, column)
-    },
-    orderID() {
-      return this.orderID
     }
   },  
   methods: {
-    process: function() {
-      alert('ok')
+    async process() {
+      let start_obj = this.my_obj
+      for(let i in start_obj) {
+        //let item_price = my_obj[i].price * my_obj[i].qty
+        //'item_price': item_price
+        let obj = {
+          'id_order': this.my_obj[i][0].uid,
+          'id_prod': this.my_obj[i][0].id,
+          'qty': this.my_obj[i][0].qty,
+          'unit_price': this.my_obj[i][0].price,
+        }
+        this.$root.$emit('uid', this.my_obj[i][0].uid)
+        await this.$store.dispatch('saveOrderDetails', obj)
+      }
     },
     retHome: function() {
+      this.$store.dispatch('saveOrder', {
+        'uid': this.orderID,
+        'name': this.name,
+        'surname': this.surname,
+        'order_amount' : 0
+      })
       this.$store.dispatch('removeAll')
       this.$router.push('/')
     },
@@ -343,7 +362,7 @@ export default {
             // false
           }
         }
-        x.qty = event.target.value
+        x.qty = new Number(event.target.value)
         this.$root.$emit('update', x)
       }
     },

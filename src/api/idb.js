@@ -22,13 +22,18 @@ export default {
 				console.log('onupgradeneeded')
 				let db = e.target.result
 				let objectStore = db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
-				let newObjectStore = db.createObjectStore("orders", { autoIncrement: true, keyPath: 'id' })
+				let newObjectStore = db.createObjectStore("orders_details", { autoIncrement: true, keyPath: 'id' })
+				let anotherObjectStore = db.createObjectStore("orders", { autoIncrement: false, keyPath: 'uid' })
 				//db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
 				objectStore.createIndex('id', 'id', { unique: false})
 				objectStore.createIndex('uid', 'uid', { unique: false})
+				newObjectStore.createIndex('uid', 'uid', { unique: false })
 			}
 		})
 	},
+
+	/* delete */
+	
 	async deleteItem(cat) {
 		let db = await this.getDb()
 		return new Promise(resolve => {
@@ -47,6 +52,43 @@ export default {
 			}
 		})
 	},
+	async removeAll () {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['cats'],'readwrite')
+			trans.oncomplete = () => {
+				resolve()
+			}
+			let store = trans.objectStore('cats')
+			store.clear()
+		})
+	},
+	async deleteData(x) {
+		let db = await this.getDb()
+		console.log('into idb fx')
+		console.log(x)
+		return new Promise(resolve => {
+			let transaction = db.transaction(['cats'],'readwrite')
+			transaction.oncomplete = () => {
+				resolve('Transaction completed')
+				//resolve()
+			}
+			transaction.onerror = function(event) {
+				console.log(transaction.error)
+			} 
+			// create an object store on the transaction
+			var objectStore = transaction.objectStore("cats")
+			var objectStoreRequest = objectStore.delete(x)
+			objectStoreRequest.onsuccess = function(event) {
+				console.log('report the success of our request')
+			}
+			objectStoreRequest.onerror = function(event) {
+				console.log(transaction.error)
+			}
+		})
+	},
+	/* get records */
+
 	async getItems() {
 		let db = await this.getDb()
 		return new Promise(resolve => {
@@ -66,6 +108,48 @@ export default {
 
 		})
 	},
+
+	async getItemsByUid(uid) {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['cats'],'readonly')
+			trans.oncomplete = () => {
+				resolve(cats)
+			}			
+			let store = trans.objectStore('cats')
+			var myIndex = store.index('uid')
+			var getRequest = myIndex.get(uid)
+			getRequest.onsuccess = function() {
+				console.log(getRequest.result);
+			}
+			myIndex.openCursor().onsuccess = function(event) {
+				var cursor = event.target.result
+				if(cursor) {
+					console.lo(cursor.value.id)
+					cursor.continue()
+				} else {
+				  console.log('Entries all displayed.')
+				}
+			}
+			/*
+			getRequest.onsuccess = function() {
+    			console.log(getRequest.result)
+			}
+			let order = []			
+			store.openCursor().onsuccess = e => {
+				let cursor = e.target.result
+				if (cursor) {
+					order.push(cursor.value)
+					cursor.continue()
+				}
+			}
+			*/
+
+		})
+	},
+
+	/* add records */
+	
 	async saveItem(cat) {
 		let db = await this.getDb()
 		return new Promise(resolve => {
@@ -77,17 +161,32 @@ export default {
 			store.put(cat)
 		})	
 	},
-	async removeAll () {
+	async saveOrderDetails(order) {
+		console.log('new record new table')
 		let db = await this.getDb()
 		return new Promise(resolve => {
-			let trans = db.transaction(['cats'],'readwrite')
+			let trans = db.transaction(['orders_details'], 'readwrite')
 			trans.oncomplete = () => {
 				resolve()
 			}
-			let store = trans.objectStore('cats')
-			store.clear()
+			let store = trans.objectStore('orders_details')
+			store.put(order)
+		})	
+	},
+	async saveOrder(order) {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['orders'], 'readwrite')
+			trans.oncomplete = () => {
+				resolve()
+			}
+			let store = trans.objectStore('orders')
+			store.put(order)
 		})
 	},
+
+	/* update records */
+	
 	async update (item) {
 		console.log(item)
 		let db = await this.getDb()
@@ -125,30 +224,5 @@ export default {
 					
 			}
 		})		
-	},
-	async deleteData(x) {
-		let db = await this.getDb()
-		console.log('into idb fx')
-		console.log(x)
-		return new Promise(resolve => {
-			let transaction = db.transaction(['cats'],'readwrite')
-			transaction.oncomplete = () => {
-				resolve('Transaction completed')
-				//resolve()
-			}
-			transaction.onerror = function(event) {
-				console.log(transaction.error)
-			} 
-			// create an object store on the transaction
-			var objectStore = transaction.objectStore("cats")
-			var objectStoreRequest = objectStore.delete(x)
-			objectStoreRequest.onsuccess = function(event) {
-				console.log('report the success of our request')
-			}
-			objectStoreRequest.onerror = function(event) {
-				console.log(transaction.error)
-			}
-		})
 	}
-
 }

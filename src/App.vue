@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="inspire">
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
@@ -14,7 +14,7 @@
       <v-btn icon>
         <v-icon>mdi-account-circle</v-icon></router-link>
       </v-btn>
-      <v-btn  icon>
+      <v-btn  v-on="on" icon>
         <v-badge
           content="2"
           value="2"
@@ -26,8 +26,8 @@
       </v-btn>
       <v-btn v-on="on" href="/cart" icon>
         <v-badge
-          :content="foo"
-          :value="foo"
+          content="2"
+          value="2"
           color="green"
           overlap
         >

@@ -128,6 +128,8 @@ export default {
 	},
 	async deleteData(x) {
 		let db = await this.getDb()
+		console.log('into idb fx')
+		console.log(x)
 		return new Promise(resolve => {
 			let transaction = db.transaction(['cats'],'readwrite')
 			transaction.oncomplete = () => {
@@ -136,13 +138,10 @@ export default {
 			}
 			transaction.onerror = function(event) {
 				console.log(transaction.error)
-			}
-			let store = transaction.objectStore('cats')	  
+			} 
 			// create an object store on the transaction
-			var objectStore = transaction.objectStore("cats")		
-			// Make a request to delete the specified record out of the object store
+			var objectStore = transaction.objectStore("cats")
 			var objectStoreRequest = objectStore.delete(x)
-		
 			objectStoreRequest.onsuccess = function(event) {
 				console.log('report the success of our request')
 			}

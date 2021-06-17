@@ -18,8 +18,8 @@ export default new Vuex.Store({
   },
   actions: {
     async deleteItem(dispatch, payload) {
-      console.log('store is being asked to delete '+ payload.id)
-      await idb.deleteData(payload.id)
+      console.log('store is being asked to delete ' + payload._id)
+      await idb.deleteData(payload._id)
     },
     async getItem(context, cat) {
       let result = await idb.read(cat)

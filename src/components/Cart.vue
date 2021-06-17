@@ -23,6 +23,7 @@
                   <th class="text-center">PRICE</th>
                   <th >QUANTITY</th>
                   <th class="text-center">TOTAL</th>
+                  <th class="text-center">ID</th>
                   <th class="text-center">ACTION</th>                
                 </tr>
               </thead>
@@ -57,8 +58,15 @@
                   </td>
                   <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
                   <td class="text-center">$<span class="subtotal">{{ i[0].qty *  i[0].price }}</span></td>
+                  <td class="text-center" >
+                    <v-text-field 
+                      :v-model="orderID"
+                      :value="i[0].uid"
+                      type="text"
+                    ></v-text-field>
+                  </td>
                   <td class="text-center" ><a @click="deleteItem(i[0])">X</a></td>
-                </tr>              
+                  </tr>              
               </tbody>
             </template>
           </v-simple-table>
@@ -119,6 +127,7 @@
                         <v-text-field
                           label="Legal first name*"
                           required
+                          v-model="name"
                         ></v-text-field>
                       </v-col>
                       <v-col
@@ -128,14 +137,16 @@
                       >
                         <v-text-field
                           label="Legal last name*"
+                          v-model="surname"
                           hint="example of persistent helper text"
                           persistent-hint
                           required
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12">
+                      <v-col cols="4">
                         <v-text-field
                           label="Email*"
+                          v-model="email"
                           required
                         ></v-text-field>
                       </v-col>
@@ -145,8 +156,10 @@
                         cols="12"
                         sm="6"
                         md="4"
+                        offset="5"
+                        primary
                       >
-                        <p>Order ID: 46767876781232gge</p>
+                        <p>Your Order</p>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -157,24 +170,94 @@
                               <tr>
                                 <th class="text-center">ITEM</th>
                                 <th class="text-center">PRICE</th>
-                                <th >QUANTITY</th>
+                                <th class="text-center">QUANTITY</th>
                                 <th class="text-center">TOTAL</th>              
                               </tr>
                             </thead>
                             <tbody>
-
+                              <tr v-for="i in my_obj" :key="my_obj[i]">
+                                <td class="text-center">
+                                  <v-list-item
+                                  key="1"
+                                  @click="void(0)"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title >{{i[0].name}}</v-list-item-title>
+                                    <v-list-item-subtitle>{{i[0].type}}</v-list-item-subtitle>
+                                  </v-list-item-content>
+                                </v-list-item></td>
+                                <td class="text-center">${{i[0].price}}</td>
+                                <td class="text-center">${{i[0].qty}}</td>
+                                </td>
+                                <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
+                                <td class="text-center">$<span class="subtotal">{{ i[0].qty *  i[0].price }}</span></td>
+                              </tr>
                             </tbody>
                           </template>
                         </v-simple-table>
                       </v-col>
                     </v-row>
+                    <br>
+                    <v-divider></v-divider>
+                    <br><br>
+                    <v-row>
+                      <v-col :cols="2" md="2" sm="12" offset="8" class="primary">Order ID: {{orderID}}</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="2" md="2" sm="12" offset="8">Subtotal: ${{ _totalAmount(cats, 'price')}}</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="2" md="2" sm="12" offset="8">Shipping Charges: $10.00</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="2" md="2" sm="2" offset="8">Tax: $5.00</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="2" md="2" sm="2" offset="8" class="primary">Total Order: ${{ 15 + _totalAmount(cats, 'price')}}</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col offset="4">
+                        <v-dialog
+                          v-model="dialog2"
+                          width="500"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              color="red lighten-2"
+                              dark
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              Click Me
+                            </v-btn>
+                          </template>
+
+                          <v-card>
+                            <v-card-title class="text-h5 primary lighten-2">
+                              Order Confirmation
+                            </v-card-title>
+
+                            <v-card-text><br>
+                              Thanks <b>{{name}} {{surname}}</b>, a receipt of your order will be sent to your email <b>{{ email }}</b>
+                            </v-card-text>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="primary"
+                                text
+                                @click="retHome"
+                              >
+                                Close
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-col>
+                    </v-row>
                   </v-container>
-                  <v-card-actions class="justify-end">
-                    <v-btn
-                      text
-                      @click="dialog.value = false"
-                    >Continue</v-btn>
-                  </v-card-actions>
                 </v-card>
               </template>
             </v-dialog>
@@ -193,6 +276,11 @@ export default {
   data: function() {    
     return {
       dialog: false,
+      dialog2: false,
+      name: '',
+      orderID: null,
+      surname: '',
+      email: '',
       my_obj : null,
       number_items: null,
       breadcrums: [
@@ -216,7 +304,7 @@ export default {
   },
   created() {
     console.log('start')
-    this.$store.dispatch('getItems');
+    this.$store.dispatch('getItems')
   },
   mounted: function() {
     
@@ -229,28 +317,51 @@ export default {
     },
     totalAmount(array, column) {
       this._totalAmount(array, column)
+    },
+    orderID() {
+      return this.orderID
     }
   },  
   methods: {
-    test: function() {
+    process: function() {
       alert('ok')
+    },
+    retHome: function() {
+      this.$store.dispatch('removeAll')
+      this.$router.push('/')
     },
     greet: function (x) {
       console.log(event)
       console.log(event.target)
       if (event) {
-        alert(event.target.value)
+        //alert(event.target.value)
+        if(event.target.value == 0) {
+          if (confirm('With this action you delete the item, you wish continue?')) {
+            this.$store.dispatch('deleteItem', x)
+            this.$store.dispatch('getItems')
+          } else {
+            // false
+          }
+        }
         x.qty = event.target.value
         this.$root.$emit('update', x)
       }
     },
     deleteItem: function(i) {
-      console.log('test')
-      return this.$store.dispatch('deleteItem', i)
+      if (confirm('With this action you delete the item/items in the store, you wish continue?')) {
+        this.$store.dispatch('deleteItem', i)
+        this.$route.push('/')
+      } else {
+        // false
+      }
     },
     deleteAll: function() {
-      console.log('im alive')
-      return this.$store.dispatch('deleteAll')
+      if (confirm('With this action you delete all items in the store, you wish continue?')) {
+        this.$store.dispatch('removeAll')
+        this.$route.push('/')
+      } else {
+            // false
+      }
     },
     _function: function(obj) {
       let test = obj.reduce(function (r, a) {
@@ -259,7 +370,6 @@ export default {
         console.log('im alive')
         //this.greet()
         return r
-        
       }, this.my_obj = Object.create(null))
       
     },   

@@ -8,7 +8,7 @@
           <v-breadcrumbs class="pb-0" :items="breadcrums"></v-breadcrumbs>
           <v-row dense>
             <v-col cols="12" sm="8" class="pl-6 pt-6">
-              <small>Showing 1-12 of 12 itemducts</small>
+              <small>Showing 1-12 of 12 item products</small>
             </v-col>
             <!--
             <v-col cols="12" sm="4">
@@ -88,6 +88,7 @@ export default {
           type:'Jackets',
           price:'18.00',
           src:require('../assets/imgs/1.jpg')
+          
         },
         {
           id:2,
@@ -137,12 +138,14 @@ export default {
           type:'Jackets',
           price:'25.00',
           src:require('../assets/imgs/8.jpg')
-        },{
+        },
+        {
           id:9,
           name:'MANGO WINTER',
           type:'Sweaters',
           price:'50.00',
           src:require('../assets/imgs/9.jpg')
+          
         },
         {
           id:10,
@@ -150,6 +153,7 @@ export default {
           type:'Denim',
           price:'34.00',
           src:require('../assets/imgs/10.jpg')
+          
         },
         {
           id:11,
@@ -157,6 +161,7 @@ export default {
           type:'Jackets',
           price:'38.00',
           src:require('../assets/imgs/11.jpg')
+          
         },
         {
           id:12,
@@ -164,6 +169,7 @@ export default {
           type:'Jackets',
           price:'25.00',
           src:require('../assets/imgs/12.jpg')
+          
         }
       ],
       temp: false

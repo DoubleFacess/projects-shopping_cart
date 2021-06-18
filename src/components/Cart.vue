@@ -353,8 +353,9 @@ export default {
         'uid': this.orderID,
         'name': this.name,
         'surname': this.surname,
-        'date' : my_date,
-        'order_amount' : amount
+        'email': this.email,
+        'date': my_date,
+        'order_amount': amount
       })
       this.$store.dispatch('removeAll')
       this.$router.push('/')

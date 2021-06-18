@@ -120,51 +120,41 @@ export default {
 			store.openCursor().onsuccess = e => {
 				let cursor = e.target.result
 				if (cursor) {
-					console.log('idb getter order')
+					console.log('orders cursor')
+					//console.log(cursor.value.uid)
 					orders.push(cursor.value)
 					cursor.continue()
+					console.log('orders cursor terminated')
 				}
 			}
 
 		})
 	},
 
-	async getItemsByUid(uid) {
+	async getOrderDetail(id_order) {
+		console.log(id_order)
 		let db = await this.getDb()
 		return new Promise(resolve => {
-			let trans = db.transaction(['cats'],'readonly')
+			let trans = db.transaction(['orders_details'],'readonly')
 			trans.oncomplete = () => {
-				resolve(cats)
+				resolve(orders_details)
 			}			
-			let store = trans.objectStore('cats')
-			var myIndex = store.index('uid')
-			var getRequest = myIndex.get(uid)
+			let store = trans.objectStore('orders_details')
+			let orders_details = []	
+			let myIndex = store.index('id_order')
+			let getRequest = myIndex.get(id_order)
 			getRequest.onsuccess = function() {
-				console.log(getRequest.result);
+				console.log(getRequest.result)
 			}
 			myIndex.openCursor().onsuccess = function(event) {
 				var cursor = event.target.result
 				if(cursor) {
-					console.lo(cursor.value.id)
+					console.log(cursor.value.id)
 					cursor.continue()
 				} else {
 				  console.log('Entries all displayed.')
 				}
 			}
-			/*
-			getRequest.onsuccess = function() {
-    			console.log(getRequest.result)
-			}
-			let order = []			
-			store.openCursor().onsuccess = e => {
-				let cursor = e.target.result
-				if (cursor) {
-					order.push(cursor.value)
-					cursor.continue()
-				}
-			}
-			*/
-
 		})
 	},
 

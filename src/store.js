@@ -9,7 +9,6 @@ export default new Vuex.Store({
   state: {
     items:[],
     orders: [],
-    temp: []
   },
   getters: {
     getOrders: state => state.orders
@@ -37,23 +36,28 @@ export default new Vuex.Store({
       console.log(result)
 
     },
-    async getItemsByUid(uid) {
-      await idb.getItemsByUid(uid)
-    },
     async getItems(context) {
-      context.state.items = [];
+      context.state.items = []
       let items = await idb.getItems()
       items.forEach(c => {
         context.state.items.push(c)
       })
     },
     async getOrders(context) {
-      console.log('store action')
-      context.state.orders = [];
+      console.log('orders action')
+      context.state.orders = []
       let orders = await idb.getOrders()
+      //console.log(items)
+      /*
       orders.forEach(c => {
         context.state.orders.push(c)
       })
+      */
+      context.state.orders = orders
+    },
+    async getOrderDetail(payload) {
+      console.log(payload)
+      //await idb.getOrderDetail(payload)
     },
 
     /* add */

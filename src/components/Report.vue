@@ -6,11 +6,6 @@
             <v-col cols="12" sm="8" class="pl-6 pt-6">
                 <small>Daily Orders Report</small>
             </v-col>
-            <!--
-            <v-col cols="12" sm="4">
-            <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>
-            </v-col>
-            -->
         </v-row>
         <v-divider></v-divider>
         <v-row>
@@ -19,54 +14,25 @@
                 <template v-slot:default>
                   <thead>
                     <tr>
-                      <th class="text-center">ITEM</th>
-                      <th class="text-center">PRICE</th>
-                      <th >QUANTITY</th>
-                      <th class="text-center">TOTAL</th>
-                      <th class="text-center">ID</th>
-                      <th class="text-center">ACTION</th>                
+                      <th class="text-center">Cust. Name</th>
+                      <th class="text-center">Cust. Surname</th>
+                      <th class="text-center">Cust. Email</th>
+                      <th class="text-center">Order Amount</th>
+                      <th class="text-center">Order Date</th>
+                      <th class="text-center">Order ID</th>
+                      <th class="text-center">Action</th>                
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="i in my_obj" :key="my_obj[i]">
-                      <td class="text-center">
-                        <v-list-item
-                        key="1"
-                        @click="void(0)"
-                      >
-                        <v-list-item-avatar>
-                          <v-img :src="require('../assets/imgs/1.jpg')"></v-img>
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                          <v-list-item-title >{{i[0].name}}</v-list-item-title>
-                          <v-list-item-subtitle>{{i[0].type}}</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item></td>
-                      <td class="text-center">${{i[0].price}}</td>
-                      <td class="text-center">
-                        <v-text-field
-                          id="yes"
-                          class="pt-10"
-                          label="Outlined"
-                          style="width: 70px;"
-                          single-line
-                          outlined
-                          :value="i[0].qty"
-                          type="number"
-                          v-on:click="greet(i[0])"
-                        ></v-text-field>
-                      </td>
-                      <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
-                      <td class="text-center">$<span class="subtotal">{{ i[0].qty *  i[0].price }}</span></td>
-                      <td class="text-center" >
-                        <v-text-field 
-                          :v-model="orderID"
-                          :value="i[0].uid"
-                          type="text"
-                        ></v-text-field>
-                      </td>
-                      <td class="text-center" ><a @click="deleteItem(i[0])">X</a></td>
-                      </tr>              
+                    <tr v-for="i in orders" :key="i.uid">
+                      <td class="text-center">{{i.name}}</td>
+                      <td class="text-center">{{i.surname}}</td>
+                      <td class="text-center">{{i.email}}</td>
+                      <td class="text-center">{{i.order_amount}}</td>
+                      <td class="text-center">{{i.date}}</td>
+                      <td class="text-center">{{i.uid}}</td>
+                      <td class="text-center" ><a @click="getOrder(i.uid)">X</a></td>
+                    </tr>              
                   </tbody>
                 </template>
               </v-simple-table>
@@ -80,7 +46,7 @@
                         <tbody>
                             <tr>
                             <td>Order Subtotal</td>
-                            <td class="text-right" style="width: 50px;" id="sub-total">${{ _totalAmount(cats, 'price')}}</td>
+                            <td class="text-right" style="width: 50px;" id="sub-total"></td>
                             </tr>
                             <tr>
                             <td>Shipping Charges</td>
@@ -92,7 +58,7 @@
                             </tr>
                             <tr>
                             <td>Total</td>
-                            <td class="text-right" style="width: 50px;" id="sub-total">${{ 15 + _totalAmount(cats, 'price')}}</td>
+                            <td class="text-right" style="width: 50px;" id="sub-total"></td>
                             </tr>
                         </tbody>
                     </template>
@@ -103,8 +69,11 @@
   </div>
 </template>
 <script>
-import Cat from '@/components/Cat';
-export default {  
+
+import idb from '@/api/idb'
+
+export default { 
+  name: 'Report', 
   data: function() {    
     return {
         breadcrums: [
@@ -126,18 +95,21 @@ export default {
         ],
     }
   },
-  created() {
-    console.log('start')
-    this.$store.dispatch('getOrders')
+  computed: {
+    orders() {
+      return this.$store.state.orders
+    }
   },
   mounted: function() {
-     
+    this.$store.dispatch('getOrders')
   },
-  computed: {
-    
-  },  
   methods: {
-    
+    async getOrder(id_order) {
+      let payload = {}
+      payload.id_order = id_order
+      await this.$store.dispatch('getOrderDetail', payload.id_order)
+      //await idb.getOrderDetail(id_order)
+    }
   }
 }
 </script>

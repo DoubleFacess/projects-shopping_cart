@@ -8,15 +8,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     items:[],
+    orders: [],
     temp: []
   },
   getters: {
-    getItems: state => state.items
+    getOrders: state => state.orders
   },
   mutations: {
 
   },
   actions: {
+
+    /* delete */
+
     async deleteItem(dispatch, payload) {
       console.log('store is being asked to delete ' + payload._id)
       await idb.deleteData(payload._id)
@@ -25,6 +29,9 @@ export default new Vuex.Store({
       await idb.removeAll()
       return context.state.items = []
     },
+
+    /* get */
+
     async getItem(context, cat) {
       let result = await idb.read(cat)
       console.log(result)
@@ -40,6 +47,17 @@ export default new Vuex.Store({
         context.state.items.push(c)
       })
     },
+    async getOrders(context) {
+      console.log('store action')
+      context.state.orders = [];
+      let orders = await idb.getOrders()
+      orders.forEach(c => {
+        context.state.orders.push(c)
+      })
+    },
+
+    /* add */
+
     async saveItem(context, cat) {
       await idb.saveItem(cat);
     }, 

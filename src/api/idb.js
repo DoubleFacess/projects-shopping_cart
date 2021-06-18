@@ -27,7 +27,7 @@ export default {
 				//db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
 				objectStore.createIndex('id', 'id', { unique: false})
 				objectStore.createIndex('uid', 'uid', { unique: false})
-				newObjectStore.createIndex('uid', 'uid', { unique: false })
+				newObjectStore.createIndex('id_order', 'id_order', { unique: false })
 			}
 		})
 	},
@@ -102,6 +102,26 @@ export default {
 				let cursor = e.target.result
 				if (cursor) {
 					cats.push(cursor.value)
+					cursor.continue()
+				}
+			}
+
+		})
+	},
+	async getOrders() {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['orders'], 'readonly')
+			trans.oncomplete = () => {
+				resolve(orders)
+			}			
+			let store = trans.objectStore('orders')
+			let orders = []			
+			store.openCursor().onsuccess = e => {
+				let cursor = e.target.result
+				if (cursor) {
+					console.log('idb getter order')
+					orders.push(cursor.value)
 					cursor.continue()
 				}
 			}

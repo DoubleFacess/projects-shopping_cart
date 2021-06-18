@@ -27,6 +27,7 @@
                   <th class="text-center">ACTION</th>                
                 </tr>
               </thead>
+              <!--
               <tbody>
                 <tr v-for="i in my_obj" :key="my_obj[i]">
                   <td class="text-center">
@@ -56,7 +57,6 @@
                       v-on:click="greet(i[0])"
                     ></v-text-field>
                   </td>
-                  <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
                   <td class="text-center">$<span class="subtotal">{{ i[0].qty *  i[0].price }}</span></td>
                   <td class="text-center" >
                     <v-text-field 
@@ -68,6 +68,7 @@
                   <td class="text-center" ><a @click="deleteItem(i[0])">X</a></td>
                   </tr>              
               </tbody>
+            -->
             </template>
           </v-simple-table>
         </v-col>
@@ -249,7 +250,7 @@
                               <v-btn
                                 color="primary"
                                 text
-                                @click="retHome"
+                                @click="saveOrder"
                               >
                                 Close
                               </v-btn>
@@ -339,12 +340,15 @@ export default {
         await this.$store.dispatch('saveOrderDetails', obj)
       }
     },
-    retHome: function() {
+    saveOrder: function() {
+      let my_date = new Date().toDateString()
+      let amount = this._totalAmount(this.cats, 'price')
       this.$store.dispatch('saveOrder', {
         'uid': this.orderID,
         'name': this.name,
         'surname': this.surname,
-        'order_amount' : 0
+        'date' : my_date,
+        'order_amount' : amount
       })
       this.$store.dispatch('removeAll')
       this.$router.push('/')

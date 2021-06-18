@@ -1,26 +1,14 @@
 <template>
   <v-container>
     <Shop />
-    <v-row>
-      <v-col :cat="cat" cols="4" v-for="(cat,idx) in cats" :key="idx">
-        <Cat :cat="cat" @delete="deleteItem" @edit="editCat" />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-btn @click="addCat">Add Cat</v-btn>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
 <script>
-import Cat from '@/components/Cat';
 import Shop from '@/components/Shop';
 
 export default {
   components: {
-    Cat,
     Shop
   },
   computed: {

@@ -28,10 +28,10 @@
                       <td class="text-center">{{i.name}}</td>
                       <td class="text-center">{{i.surname}}</td>
                       <td class="text-center">{{i.email}}</td>
-                      <td class="text-center">{{i.order_amount}}</td>
+                      <td class="text-center">${{i.order_amount}}</td>
                       <td class="text-center">{{i.date}}</td>
                       <td class="text-center">{{i.uid}}</td>
-                      <td class="text-center" ><a @click="getOrder(i.uid)">X</a></td>
+                      <td class="text-center" ><a @click="getOrder(i)">X</a></td>
                     </tr>              
                   </tbody>
                 </template>
@@ -70,8 +70,6 @@
 </template>
 <script>
 
-import idb from '@/api/idb'
-
 export default { 
   name: 'Report', 
   data: function() {    
@@ -104,11 +102,8 @@ export default {
     this.$store.dispatch('getOrders')
   },
   methods: {
-    async getOrder(id_order) {
-      let payload = {}
-      payload.id_order = id_order
-      await this.$store.dispatch('getOrderDetail', payload.id_order)
-      //await idb.getOrderDetail(id_order)
+    async getOrder(order) {
+      await this.$store.dispatch('getOrderDetail', order)
     }
   }
 }

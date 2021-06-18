@@ -131,8 +131,7 @@ export default {
 		})
 	},
 
-	async getOrderDetail(id_order) {
-		console.log(id_order)
+	async getOrderDetail(order) {
 		let db = await this.getDb()
 		return new Promise(resolve => {
 			let trans = db.transaction(['orders_details'],'readonly')
@@ -142,7 +141,7 @@ export default {
 			let store = trans.objectStore('orders_details')
 			let orders_details = []	
 			let myIndex = store.index('id_order')
-			let getRequest = myIndex.get(id_order)
+			let getRequest = myIndex.get(order.uid)
 			getRequest.onsuccess = function() {
 				console.log(getRequest.result)
 			}

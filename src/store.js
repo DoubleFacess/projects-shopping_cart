@@ -55,9 +55,9 @@ export default new Vuex.Store({
       */
       context.state.orders = orders
     },
-    async getOrderDetail(payload) {
-      console.log(payload)
-      //await idb.getOrderDetail(payload)
+    async getOrderDetail(context, order) {
+      console.log(order)
+      await idb.getOrderDetail(order)
     },
 
     /* add */

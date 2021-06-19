@@ -52,6 +52,22 @@ export default {
 			}
 		})
 	},
+	async deleteOrder(order) {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let empty = []
+			let trans = db.transaction(['orders'],'readwrite')
+			trans.oncomplete = () => {
+				resolve(empty)
+			}
+			let store = trans.objectStore('orders')
+			getRequest.onsuccess = function() {
+				console.log(getRequest.result)
+			}
+			var objectStoreRequest = objectStore.delete(order.uid)
+
+		})
+	},
 	async removeAll () {
 		let db = await this.getDb()
 		return new Promise(resolve => {

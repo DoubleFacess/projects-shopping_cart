@@ -229,7 +229,7 @@
                               v-on="on"
                               @click="process()"
                             >
-                              Click Me
+                              Send Order
                             </v-btn>
                           </template>
 
@@ -291,9 +291,14 @@ export default {
           href: '/',
         },
         {
-          text: 'Clothing',
+          text: 'Shopping',
           disabled: false,
-          href: 'breadcrumbs_clothing',
+          href: '/shop',
+        },
+        {
+          text: 'Orders (need login)',
+          disabled: false,
+          href: '/report',
         },
         {
           text: 'T-Shirts',

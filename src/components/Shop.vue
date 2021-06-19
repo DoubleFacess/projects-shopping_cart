@@ -71,12 +71,12 @@ export default {
           href: '/',
         },
         {
-          text: 'Clothing',
+          text: 'ShoppingCart',
           disabled: false,
-          href: '/',
+          href: '/cart',
         },
         {
-          text: 'T-Shirts',
+          text: 'Shopping ',
           disabled: true,
           href: 'breadcrumbs_shirts',
         },

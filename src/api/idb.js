@@ -152,26 +152,43 @@ export default {
 		return new Promise(resolve => {
 			let trans = db.transaction(['orders_details'],'readonly')
 			trans.oncomplete = () => {
-				resolve(orders_details)
-			}			
+				resolve(details)
+			}		
 			let store = trans.objectStore('orders_details')
-			let orders_details = []	
 			let myIndex = store.index('id_order')
 			let getRequest = myIndex.get(order.uid)
 			getRequest.onsuccess = function() {
-				console.log(getRequest.result)
+				//console.log(getRequest.result)
 			}
+			let details = []	
 			myIndex.openCursor().onsuccess = function(event) {
 				var cursor = event.target.result
 				if(cursor) {
-					console.log(cursor.value.id)
+					//console.log(cursor.value.id)
+					details.push(cursor.value)
 					cursor.continue()
 				} else {
-				  console.log('Entries all displayed.')
+				  //console.log('Entries all displayed.')
 				}
 			}
 		})
 	},
+	/*
+	async getItems(table, obj, i, index) {
+		let db = await this.getDb()
+		let trans = db.transaction([table], 'readonly')
+		trans.oncomplete = () => {
+			resolve(temp)
+		}
+		let store = trans.objectStore(table)
+		if(arguments[2]) {
+			let myIndex = store.index(index)
+			let getRequest = myIndex.get(id)
+		}
+		let myIndex = store.index('id_order')
+
+	}
+	*/
 
 	/* add records */
 	

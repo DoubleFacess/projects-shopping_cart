@@ -363,7 +363,7 @@ export default {
         'order_amount': amount
       })
       this.$store.dispatch('removeAll')
-      this.$router.push('/')
+      //this.$router.push('/')
     },
     greet: function (x) {
       console.log(event)

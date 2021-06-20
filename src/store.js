@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     items:[],
     orders: [],
+    details: []
   },
   getters: {
     getOrders: state => state.orders
@@ -64,8 +65,12 @@ export default new Vuex.Store({
       context.state.orders = orders
     },
     async getOrderDetail(context, order) {
-      console.log(order)
-      await idb.getOrderDetail(order)
+      //console.log(order)
+      let details = await idb.getOrderDetail(order)
+      details.forEach(c => {
+        context.state.details.push(c)
+        console.log('try is ok')
+      })
     },
 
     /* add */

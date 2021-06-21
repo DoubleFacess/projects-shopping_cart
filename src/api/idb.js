@@ -61,7 +61,10 @@ export default {
 				resolve(empty)
 			}
 			let store = trans.objectStore('orders')
-			store.delete(order.id_order)
+			console.log(order.uid)
+			//var keyRangeValue = IDBKeyRange.only(order.uid)
+			store.delete(order.uid)
+			console.log('end of delete')
 		})
 	},
 	async removeAll () {
@@ -149,15 +152,18 @@ export default {
 			let trans = db.transaction(['orders_details'],'readonly')
 			trans.oncomplete = () => {
 				resolve(details)
-			}		
+			}
+			var keyRangeValue = IDBKeyRange.only(order.uid)
 			let store = trans.objectStore('orders_details')
 			let myIndex = store.index('id_order')
+  			var getKeyRequest = myIndex.getKey(order.uid)
 			let getRequest = myIndex.get(order.uid)
 			getRequest.onsuccess = function() {
-				//console.log(getRequest.result)
+				console.log(getKeyRequest.result)
+				console.log('uhm')
 			}
-			let details = []	
-			myIndex.openCursor().onsuccess = function(event) {
+			let details = []
+			myIndex.openCursor(keyRangeValue).onsuccess = function(event) {
 				var cursor = event.target.result
 				if(cursor) {
 					//console.log(cursor.value.id)

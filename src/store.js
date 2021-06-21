@@ -25,9 +25,9 @@ export default new Vuex.Store({
       console.log('store is being asked to delete ' + payload._id)
       await idb.deleteData(payload._id)
     },
-    async deleteOrder(payload) {
-      console.log('store is being asked to delete ' + payload.id_order)
-      await idb.deleteOrder(payload.id_order)
+    async deleteOrder(context, order) {
+      console.log('store is being asked to delete ' + order.uid)
+      await idb.deleteOrder(order)
     },
     async removeAll(context) {
       await idb.removeAll()

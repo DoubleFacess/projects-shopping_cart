@@ -174,6 +174,7 @@ export default {
       console.log(test)
     },
     async deleteOrder(order){
+      console.log(order)
       if (confirm('With this action you remove all entries for this order, you wish continue?')) {
         this.$store.dispatch('deleteOrder', order)
         this.$store.dispatch('getOrders')

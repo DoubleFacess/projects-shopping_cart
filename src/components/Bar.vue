@@ -24,7 +24,7 @@
                     color="red"
                     overlap
                 >
-                    <span slot="badge">{{ orders }}</span>
+                    <span slot="badge">{{ orders.lenght }}</span>
                     <!--
                     <span slot="badge" v-if="myState.length > 0">{{ orders.lenght }}</span>
                     <span slot="badge" v-else>{{ init_orders }}</span>
@@ -43,7 +43,7 @@
                     color="red"
                     overlap
                 >
-                    <span slot="badge">{{ sum(this.cats, 'qty' )}}</span>
+                    <span slot="badge">{{ my_sum('qty')}}</span>
                     <v-icon>mdi-cart</v-icon>
                 </v-badge>
             </v-btn>
@@ -60,7 +60,6 @@ export default{
             notifications: 2,
             init_orders: 0,
             number_items: 0,
-            orders: 0,
             on: ''
         }
     },
@@ -98,7 +97,6 @@ export default{
             if (action.type === 'saveOrder') {
                 console.log('orders changed')
                 this.$store.dispatch('getOrders')
-                
                 /*
                 let parsedobj = JSON.parse(JSON.stringify(this.orders))
                 console.log(parsedobj)
@@ -107,13 +105,12 @@ export default{
             }
         })
     },
-
     methods: {
         sum: function(_array, key) {
             return _array.reduce((a, b) => a + (b[key] || 0), 0)
         },
-        my_sum: function() {
-            return this.sum(this.cats, 'qty')
+        my_sum: function(field) {
+            return this.sum(this.cats, field)
         },
         _numberObjs: function (obj) {
             let x = Object.keys(obj).length

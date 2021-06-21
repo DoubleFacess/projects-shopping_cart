@@ -45,6 +45,9 @@ export default new Vuex.Store({
       console.log(result)
 
     },
+    async emptyStoreDetails(context) {
+      context.state.details = []
+    },
     async getItems(context) {
       context.state.items = []
       let items = await idb.getItems()

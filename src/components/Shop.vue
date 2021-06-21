@@ -40,8 +40,7 @@
                 <v-card-text class="text--primary">
                   <p>${{item.price}}</p>
                 </v-card-text>
-                <v-card-actions class="justify-end">
-                  <v-btn color="primary" @click="$emit('add', item)">Delete</v-btn>
+                <v-card-actions class="justify-end">                  
                   <v-btn color="secondary" @click="save(item)">Add to Cart</v-btn>
                   <!--
                   <v-btn color="secondary" @click="my_method('edit', item)">Edit</v-btn>

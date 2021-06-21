@@ -34,7 +34,7 @@
                     <td class="text-center" >
                       <v-dialog
                         v-model="dialog"
-                        width="500"
+                        width="750"
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
@@ -47,16 +47,37 @@
                           >Detail</v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="text-h5 primary lighten-2">Order Details</v-card-title>
+                          <v-card-title class="text-h5 primary lighten-2">Order {{ id_order }}  Details</v-card-title>
                           <v-card-text>
+                            <v-simple-table>
+                              <template v-slot:default>
+                                <thead>
+                                  <tr>
+                                    <th class="text-center">Product ID</th>
+                                    <th >QUANTITY</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Prod Tot Price</th>                                                   
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="i in orders_detail" :key="i.id">                                    
+                                    <td class="text-center">{{ i.id_prod }}</td>
+                                    <td class="text-center">{{ i.qty }}</td>
+                                    <td class="text-center">${{ i.unit_price }}</td>
+                                    <td class="text-center">${{ i.qty * i.unit_price }}</td>
+                                  </tr>                                                                                          
+                                </tbody>
+                              </template>
+                            </v-simple-table>
                           </v-card-text>
                           <v-divider></v-divider>
                           <v-card-actions>
+                            <v-card-title class="text-h5 lighten-2">Total Order Amount {{ total_amount }}</v-card-title>
                             <v-spacer></v-spacer>
                             <v-btn
                               color="primary"
                               text
-                              @click="dialog = false"
+                              @click="test()"
                             >Close</v-btn>
                           </v-card-actions>
                         </v-card>
@@ -129,10 +150,23 @@ export default {
   computed: {
     orders() {
       return this.$store.state.orders
+    },
+    orders_detail() {
+      return this.$store.state.details
+    },
+    id_order() {
+      let x
+      for (let x in this.orders_detail[0]) {
+        return this.orders_detail[0]['id_order']
+      }
+    },
+    total_amount() {
+      return  this._totalAmount()
     }
   },
   mounted: function() {
     this.$store.dispatch('getOrders')
+    this.$store.dispatch('emptyStoreDetails')
   },
   methods: {
     async getOrder(order) {
@@ -141,11 +175,29 @@ export default {
     },
     async deleteOrder(order){
       if (confirm('With this action you remove all entries for this order, you wish continue?')) {
-        this.$store.dispatch('deleteOrder', x)
+        this.$store.dispatch('deleteOrder', order)
         this.$store.dispatch('getOrders')
       } else {
         // false
       }
+    },
+    test: function() {      
+      this.$store.dispatch('emptyStoreDetails')
+      return this.dialog = false
+    },
+    _totalAmount: function() {      
+      let prices = this.arraySum(this.orders_detail.filter(x => (x.unit_price > 0)).map(x => x.unit_price))*100
+      let quantity = this.orders_detail.filter(x => (x.qty > 0)).map(x => x.qty)
+      console.log(prices)
+      console.log(quantity)
+      return this.arraySum(prices)  * this.arraySum(quantity)      
+    },
+    arraySum: function(array) {
+      let sum = 0
+      for (let i = 0; i < array.length; i++) {
+        sum += array[i]
+      }
+      return sum
     }
   }
 }

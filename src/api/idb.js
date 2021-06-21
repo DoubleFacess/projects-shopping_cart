@@ -27,7 +27,7 @@ export default {
 				//db.createObjectStore("cats", { autoIncrement: true, keyPath: '_id' })
 				objectStore.createIndex('id', 'id', { unique: false})
 				objectStore.createIndex('uid', 'uid', { unique: false})
-				newObjectStore.createIndex('id_order', 'id_order', { unique: false })
+				newObjectStore.createIndex('id_order', 'id_order', { unique: true })
 			}
 		})
 	},
@@ -61,11 +61,7 @@ export default {
 				resolve(empty)
 			}
 			let store = trans.objectStore('orders')
-			getRequest.onsuccess = function() {
-				console.log(getRequest.result)
-			}
-			var objectStoreRequest = objectStore.delete(order.uid)
-
+			store.delete(order.id_order)
 		})
 	},
 	async removeAll () {

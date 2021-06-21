@@ -24,7 +24,7 @@
                     color="red"
                     overlap
                 >
-                    <span slot="badge">{{ number_items }}</span>
+                    <span slot="badge">{{ orders }}</span>
                     <!--
                     <span slot="badge" v-if="myState.length > 0">{{ orders.lenght }}</span>
                     <span slot="badge" v-else>{{ init_orders }}</span>
@@ -60,15 +60,18 @@ export default{
             notifications: 2,
             init_orders: 0,
             number_items: 0,
+            orders: 0,
             on: ''
         }
     },
+    /*
     watch: {
-        orders: function(){
-            console.log(typeof this.myState)
+        watch_orders: function(){
+            //console.log(typeof this.myState)
             this._numberObjs(this.orders)
         }
     },
+    */
     computed: {
         cats() {      
             return this.$store.state.items
@@ -78,7 +81,10 @@ export default{
         },
         ...mapGetters({
             myState: 'getOrders'
-        })
+        }),
+        numberOrders() {
+            return this._numberObjs(this.orders)
+        }
     },
     mounted: function() {
         console.log(this.sum(this.cats, 'qty'))
@@ -92,9 +98,12 @@ export default{
             if (action.type === 'saveOrder') {
                 console.log('orders changed')
                 this.$store.dispatch('getOrders')
+                
+                /*
                 let parsedobj = JSON.parse(JSON.stringify(this.orders))
                 console.log(parsedobj)
                 //console.log(this.orders)
+                */
             }
         })
     },

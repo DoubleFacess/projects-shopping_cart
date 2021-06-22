@@ -83,30 +83,30 @@ export default {
       products: [
         {
           id:1,
-          name:'BLACK TEE',
-          type:'Jackets',
+          name:'T-shirt LOVEIT',
+          type:'T-shirt',
           price:'18.00',
           src:require('../assets/imgs/1.jpg')
           
         },
         {
           id:2,
-          name:'WHITE TEE',
+          name:'Polo YOU WIN',
           type:'Polo',
           price:'40.00',
           src:require('../assets/imgs/2.jpg')
         },
         {
           id:3,
-          name:'Zara limited...',
+          name:'Zara limited Edition',
           type:'Denim',
           price:'25.00',
           src:require('../assets/imgs/3.jpg')
         },
         {
           id:4,
-          name:'SKULL TEE',
-          type:'Jackets',
+          name:'T-shirt DIAMANTE',
+          type:'T-Shirt',
           price:'30.00',
           src:require('../assets/imgs/4.jpg')
         },
@@ -119,28 +119,28 @@ export default {
         },
         {
           id:6,
-          name:'SHIRT',
+          name:'SHIRT THE BAG',
           type:'Denim',
           price:'34.00',
           src:require('../assets/imgs/6.jpg')
         },
         {
           id:7,
-          name:'TRUCKER JACKET',
+          name:'Awesome JACKET',
           type:'Jackets',
           price:'38.00',
           src:require('../assets/imgs/7.jpg')
         },
         {
           id:8,
-          name:'COATS',
+          name:'IS MY COATS',
           type:'Jackets',
           price:'25.00',
           src:require('../assets/imgs/8.jpg')
         },
         {
           id:9,
-          name:'MANGO WINTER',
+          name:'MANGO EAT WINTER',
           type:'Sweaters',
           price:'50.00',
           src:require('../assets/imgs/9.jpg')
@@ -148,7 +148,7 @@ export default {
         },
         {
           id:10,
-          name:'SHIRT',
+          name:'SHIRT OF LOVE',
           type:'Denim',
           price:'34.00',
           src:require('../assets/imgs/10.jpg')
@@ -156,7 +156,7 @@ export default {
         },
         {
           id:11,
-          name:'TRUCKER JACKET',
+          name:'TRUCKER JACKET Cabana',
           type:'Jackets',
           price:'38.00',
           src:require('../assets/imgs/11.jpg')
@@ -164,7 +164,7 @@ export default {
         },
         {
           id:12,
-          name:'COATS',
+          name:'COATS Special Feature',
           type:'Jackets',
           price:'25.00',
           src:require('../assets/imgs/12.jpg')

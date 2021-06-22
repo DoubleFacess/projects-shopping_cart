@@ -1,7 +1,10 @@
 # Shopping cart
-Welcome in this demostrative app
-This project works is made with VueJs and IndexedDB.
-To see in action follow the above instructions
+Welcome in this demostrative app.
+This project is made with VueJs and IndexedDB, and it uses
+Vuetify as UI frameworks and Vuex for the app state.
+To see in action follow the above instructions for local developement,
+or visit the <a href="https://awesome-borg-f6abd0.netlify.app/">demo link</a>
+
 
 ## Project setup
 ```

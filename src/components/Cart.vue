@@ -219,7 +219,7 @@
                       <v-col offset="4">
                         <v-dialog
                           v-model="dialog2"
-                          width="500"
+                          width="600"
                         >
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
@@ -227,7 +227,7 @@
                               dark
                               v-bind="attrs"
                               v-on="on"
-                              @click="process()"
+                              @click="processOrder()"
                             >
                               Send Order
                             </v-btn>
@@ -239,7 +239,7 @@
                             </v-card-title>
 
                             <v-card-text><br>
-                              Thanks <b>{{name}} {{surname}}</b>, a receipt of your order {{ orderID }} will be sent to your email <b>{{ email }}</b>
+                              Thanks <span class="red--text">{{name}} {{surname}}</span>, a receipt of your order <span class="red--text">{{ orderID }}</span> will be sent to your email <span class="red--text">{{ email }}</span>
                             </v-card-text>
 
                             <v-divider></v-divider>
@@ -249,7 +249,7 @@
                               <v-btn
                                 color="primary"
                                 text
-                                @click="retHome"
+                                @click="sendOrder"
                               >
                                 Close
                               </v-btn>
@@ -263,7 +263,7 @@
               </template>
             </v-dialog>
           </div>
-           <div class="text-center">
+          <div class="text-center">
             <v-btn class="red white--text mt-5" outlined @click="deleteAll()">DELETE </v-btn>
           </div>
         </v-col>
@@ -320,7 +320,7 @@ export default {
       if (action.type === 'deleteItem' || action.type === 'removeAll') {
         setTimeout(() => {
           this.$router.push('/')
-        }, 2000)
+        }, 800)
       }   
     })
   },
@@ -336,7 +336,7 @@ export default {
     }
   },  
   methods: {
-    async process() {
+    async processOrder() {
       let start_obj = this.my_obj
       for(let i in start_obj) {
         //let item_price = my_obj[i].price * my_obj[i].qty
@@ -351,7 +351,7 @@ export default {
         await this.$store.dispatch('saveOrderDetails', obj)
       }
     },
-    retHome: function() {
+    sendOrder: function() {
       let my_date = new Date().toDateString()
       let amount = this._totalAmount(this.cats, 'price') / 2
       this.$store.dispatch('saveOrder', {
@@ -363,7 +363,7 @@ export default {
         'order_amount': amount
       })
       this.$store.dispatch('removeAll')
-      //this.$router.push('/')
+      this.$router.push('/report')
     },
     greet: function (x) {
       console.log(event)
@@ -407,12 +407,7 @@ export default {
         return r
       }, this.my_obj = Object.create(null))
       
-    },   
-    _numberObjs: function (obj) {
-      let x = Object.keys(obj).length
-      this.number_items = x
-      return this.number_items
-    },
+    },    
     _totalAmount: function() {
       let test = document.getElementsByClassName('subtotal')
       let sum = 0

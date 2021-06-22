@@ -1,4 +1,7 @@
 # Shopping cart
+Welcome in this demostrative app
+This project works is made with VueJs and IndexedDB.
+To see in action follow the above instructions
 
 ## Project setup
 ```

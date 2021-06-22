@@ -24,10 +24,10 @@
                     color="red"
                     overlap
                 >
-                    <span slot="badge">{{ orders.lenght }}</span>
+                    <span slot="badge">{{ my_orders }}</span>
                     <!--
                     <span slot="badge" v-if="myState.length > 0">{{ orders.lenght }}</span>
-                    <span slot="badge" v-else>{{ init_orders }}</span>
+                    <span slot="badge" v-else>{{ nr_orders }}</span>
                     -->
                     <v-icon>mdi-bell</v-icon>
                 </v-badge>
@@ -53,24 +53,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
+import funcs from '../assets/js/functions.js'
 export default{
     name: 'bar',
     data: function() {    
         return {
             notifications: 2,
-            init_orders: 0,
             number_items: 0,
             on: ''
         }
     },
-    /*
-    watch: {
-        watch_orders: function(){
-            //console.log(typeof this.myState)
-            this._numberObjs(this.orders)
-        }
-    },
-    */
+    props: ['my_orders'],
     computed: {
         cats() {      
             return this.$store.state.items
@@ -78,11 +72,8 @@ export default{
         orders() {
             return this.$store.state.orders
         },
-        ...mapGetters({
-            myState: 'getOrders'
-        }),
-        numberOrders() {
-            return this._numberObjs(this.orders)
+        get_orders() {
+            return funcs._numberObjs(this.orders)
         }
     },
     mounted: function() {
@@ -93,17 +84,6 @@ export default{
                 this.$store.dispatch('getItems')
             }
         })
-        this.$store.subscribeAction((action, state) => {
-            if (action.type === 'saveOrder') {
-                console.log('orders changed')
-                this.$store.dispatch('getOrders')
-                /*
-                let parsedobj = JSON.parse(JSON.stringify(this.orders))
-                console.log(parsedobj)
-                //console.log(this.orders)
-                */
-            }
-        })
     },
     methods: {
         sum: function(_array, key) {
@@ -111,12 +91,7 @@ export default{
         },
         my_sum: function(field) {
             return this.sum(this.cats, field)
-        },
-        _numberObjs: function (obj) {
-            let x = Object.keys(obj).length
-            this.number_items = x
-            return this.number_items
-        },
+        }
     }
 }
 </script>

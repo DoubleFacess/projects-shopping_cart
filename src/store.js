@@ -34,7 +34,10 @@ export default new Vuex.Store({
       return context.state.items = []
     },
     async removeOrders(context) {
-      await idb.removeOrders()
+      await idb.deleteOrders()
+      .then(
+        alert('Orders remvoed succefully')
+      )
       return context.state.orders = []
     },
 
@@ -56,15 +59,9 @@ export default new Vuex.Store({
       })
     },
     async getOrders(context) {
-      console.log('orders action')
+      //console.log('orders action')
       context.state.orders = []
-      let orders = await idb.getOrders()
-      //console.log(items)
-      /*
-      orders.forEach(c => {
-        context.state.orders.push(c)
-      })
-      */
+      let orders = await idb.getOrders()      
       context.state.orders = orders
     },
     async getOrderDetail(context, order) {

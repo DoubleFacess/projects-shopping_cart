@@ -54,7 +54,7 @@
                                 <thead>
                                   <tr>
                                     <th class="text-center">Product ID</th>
-                                    <th >QUANTITY</th>
+                                    <th class="text-center">QUANTITY</th>
                                     <th class="text-center">Unit Price</th>
                                     <th class="text-center">Prod Tot Price</th>                                                   
                                   </tr>
@@ -77,7 +77,7 @@
                             <v-btn
                               color="primary"
                               text
-                              @click="test()"
+                              @click="closeModal()"
                             >Close</v-btn>
                           </v-card-actions>
                         </v-card>
@@ -103,30 +103,23 @@
               <template v-slot:default>
                 <tbody>
                   <tr>
-                    <td>Order Subtotal</td>
-                    <td class="text-right" style="width: 50px;" id="sub-total"></td>
-                  </tr>
-                  <tr>
-                    <td>Shipping Charges</td>
-                    <td class="text-right" style="width: 50px;">$10.00</td>
-                  </tr>
-                  <tr>
-                    <td>Tax</td>
-                    <td class="text-right" style="width: 50px;">$5.00</td>
-                  </tr>
-                  <tr>
-                    <td>Total</td>
-                    <td class="text-right" style="width: 50px;" id="sub-total"></td>
+                    <td>Orders Total Amount</td>
+                    <td class="text-right" style="width: 50px;" id="sub-total">{{ sum(orders, 'orders_amount')}}</td>
                   </tr>
                 </tbody>
               </template>
             </v-simple-table>
+            <div class="text-center">
+              <v-btn class="red white--text mt-5" outlined @click="deleteAllOrders()">Initialize Orders</v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-container>    
   </div>
 </template>
 <script>
+
+import funcs from '../assets/js/functions.js'
 
 export default { 
   name: 'Report', 
@@ -161,7 +154,8 @@ export default {
       }
     },
     total_amount() {
-      return  this._totalAmount()
+      //return  this._totalAmount()
+      return true
     }
   },
   mounted: function() {
@@ -171,10 +165,10 @@ export default {
   methods: {
     async getOrder(order) {
       let test =  this.$store.dispatch('getOrderDetail', order)
-      console.log(test)
+      //console.log(test)
     },
     async deleteOrder(order){
-      console.log(order)
+      //console.log(order)
       if (confirm('With this action you remove all entries for this order, you wish continue?')) {
         this.$store.dispatch('deleteOrder', order)
         this.$store.dispatch('getOrders')
@@ -182,24 +176,25 @@ export default {
         // false
       }
     },
-    test: function() {      
+    async deleteAllOrders(){
+      //console.log(order)
+      if (confirm('With this action you remove all orders in the DB, you wish continue?')) {
+        this.$store.dispatch('removeOrders')
+        this.$store.dispatch('getOrders')
+      } else {
+        // false
+      }
+    },
+    closeModal: function() {      
       this.$store.dispatch('emptyStoreDetails')
       return this.dialog = false
     },
-    _totalAmount: function() {      
-      let prices = this.arraySum(this.orders_detail.filter(x => (x.unit_price > 0)).map(x => x.unit_price))*100
-      let quantity = this.orders_detail.filter(x => (x.qty > 0)).map(x => x.qty)
-      console.log(prices)
-      console.log(quantity)
-      return this.arraySum(prices)  * this.arraySum(quantity)      
-    },
-    arraySum: function(array) {
-      let sum = 0
-      for (let i = 0; i < array.length; i++) {
-        sum += array[i]
-      }
-      return sum
-    }
+    sum: function(array) {
+      let my_array = array.filter(x => (x.order_amount > 0)).map(x => x.order_amount)
+      //console.log(_array)
+      return funcs.arraySum(my_array)
+      
+    },   
   }
 }
 </script>

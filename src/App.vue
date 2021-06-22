@@ -1,15 +1,19 @@
 <template>
   <v-app id="inspire">
     <v-content>
-      <bar />
+      <bar :my_orders="my_orders"/>
       <router-view />
     </v-content>
   </v-app>
 </template>
 
 <script>
+
+import { mapGetters } from 'vuex'
+
 import { v4 as uuidv4 } from 'uuid'
 import bar from './components/Bar.vue'
+import funcs from './assets/js/functions.js'
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 
 export default {
@@ -20,13 +24,22 @@ export default {
   data: () => ({
     on: '',
     foo: 0,
+    my_orders: 0
   }),
   computed: {
     cats() {      
       return this.$store.state.items
-    }
+    },
+    orders() {
+      return this.$store.state.orders
+    },
+    ...mapGetters({
+      getOrders: 'getOrders'
+    })
   },
   created () {
+    console.log('created root')
+    this.$store.dispatch('getOrders')
     this.$vuetify.theme.dark = true
     this.$root.$on('save', (payload) => {
      this.save(payload)
@@ -46,17 +59,30 @@ export default {
       this.$store.dispatch('update', payload)
       this.$store.dispatch('getItems')
     })
+    this.$store.subscribeAction((action, state) => {
+      if (action.type === 'saveOrders') {
+        this.$store.dispatch('getOrders')
+        //return this.my_orders = this.setNumberOrders(this.orders)
+        //return this.setNumberOrders(this.orders)
+      }   
+    })
   },
-  methods: {
-    _numberObjs: function (obj) {
-      let x = Object.keys(obj).length
-      this.number_items = x
-      return this.number_items
-    },    
+  mounted: function() {
+    //this.my_orders = this.setNumberOrders(this.orders)
+    console.log('mounted root')
+    this.$store.watch(
+      (state, getters) => this.getOrders,
+      (newValue, oldValue) => {                
+        //this.my_orders = this.setNumberOrders(newValue)                
+        return this.my_orders = this.setNumberOrders(newValue)                
+      }
+    )
+  },
+  methods: {       
     async save(item) {
       console.log('start')
       //this.$store.dispatch('getItems')
-      const numberObjs =  this._numberObjs(this.cats)
+      const numberObjs =  funcs._numberObjs(this.cats)
       switch(numberObjs) {
         case 0:          
           console.log('items array empty')
@@ -134,7 +160,12 @@ export default {
     },
     async delete(item) {
       await this.$store.dispatch('deleteItem', item)
+    },
+    setNumberOrders: function(obj) {
+      let x = funcs._numberObjs(obj)                
+      return x
     }
+
   }  
 }
 </script>

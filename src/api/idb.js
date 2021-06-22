@@ -60,11 +60,21 @@ export default {
 			trans.oncomplete = () => {
 				resolve(empty)
 			}
-			let store = trans.objectStore('orders')
-			console.log(order.uid)
-			//var keyRangeValue = IDBKeyRange.only(order.uid)
+			let store = trans.objectStore('orders')			
 			store.delete(order.uid)
 			console.log('end of delete')
+		})
+	},
+	async deleteOrders() {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction(['orders'],'readwrite')
+			trans.oncomplete = () => {
+				resolve()
+			}
+			let store = trans.objectStore('orders')			
+			store.clear()
+			console.log('removed all orders')
 		})
 	},
 	async removeAll () {
@@ -135,11 +145,8 @@ export default {
 			store.openCursor().onsuccess = e => {
 				let cursor = e.target.result
 				if (cursor) {
-					console.log('orders cursor')
-					//console.log(cursor.value.uid)
-					orders.push(cursor.value)
 					cursor.continue()
-					console.log('orders cursor terminated')
+					orders.push(cursor.value)
 				}
 			}
 
@@ -166,7 +173,6 @@ export default {
 			myIndex.openCursor(keyRangeValue).onsuccess = function(event) {
 				var cursor = event.target.result
 				if(cursor) {
-					//console.log(cursor.value.id)
 					details.push(cursor.value)
 					cursor.continue()
 				} else {
@@ -206,7 +212,6 @@ export default {
 		})	
 	},
 	async saveOrderDetails(order) {
-		console.log('new record new table')
 		let db = await this.getDb()
 		return new Promise(resolve => {
 			let trans = db.transaction(['orders_details'], 'readwrite')

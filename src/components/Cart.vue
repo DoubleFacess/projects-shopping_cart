@@ -272,7 +272,7 @@
   </div>
 </template>
 <script>
-import Cat from '@/components/Cat';
+
 export default {  
   data: function() {    
     return {
@@ -317,7 +317,7 @@ export default {
       this.orderID = uid
     }) 
     this.$store.subscribeAction((action, state) => {
-      if (action.type === 'deleteItem' || action.type === 'removeAll') {
+      if (action.type === 'deleteItem' || action.type === 'clearTable' || action.type === 'myDeleteItem') {
         setTimeout(() => {
           this.$router.push('/')
         }, 800)
@@ -362,7 +362,7 @@ export default {
         'date': my_date,
         'order_amount': amount
       })
-      this.$store.dispatch('removeAll')
+      this.$store.dispatch('clearTable', {'table': 'cats', 'msg': 'entries'})
       this.$router.push('/report')
     },
     greet: function (x) {
@@ -384,7 +384,7 @@ export default {
     },
     deleteItem: function(i) {
       if (confirm('With this action you delete the item/items in the store, you wish continue?')) {
-        this.$store.dispatch('deleteItem', i)
+        this.$store.dispatch('myDeleteItem', i)
         this.$store.dispatch('getItems')
       } else {
         // false
@@ -392,7 +392,7 @@ export default {
     },
     deleteAll: function() {
       if (confirm('With this action you delete all items in the store, you wish continue?')) {
-        this.$store.dispatch('removeAll')
+        this.$store.dispatch('clearTable', {'table' : 'cats', 'msg': 'entries'})
         this.$route.push('/')
       } else {
             // false

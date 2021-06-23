@@ -32,26 +32,47 @@ export default {
 		})
 	},
 
-	/* delete */
-	
-	async deleteItem(cat) {
+	/* new functions */
+
+	async clearTable(table) { //old functions removeAll deleteOrders
 		let db = await this.getDb()
 		return new Promise(resolve => {
-			let empty = []
-			let trans = db.transaction(['cats'],'readwrite')
+			let trans = db.transaction([table], 'readwrite')
 			trans.oncomplete = () => {
-				resolve(empty)
+				resolve()
 			}
-			let store = trans.objectStore('cats')
-			store.openCursor().onsuccess = e => {
-				let cursor = e.target.result
-				if (cursor) {
-					store.delete(cursor.value)
-					cursor.continue()
-				}
+			let store = trans.objectStore(table)
+			store.clear()
+			console.log('table successfully cleared')
+		})
+	},
+
+	async myDeleteItem(table, id) {
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let transaction = db.transaction([table], 'readwrite')
+			transaction.oncomplete = () => {
+				resolve('Transaction delete completed')
+				//resolve()
+			}
+			transaction.onerror = function(event) {
+				console.log(transaction.error)
+			} 
+			// create an object store on the transaction
+			var objectStore = transaction.objectStore(table)
+			var objectStoreRequest = objectStore.delete(id)
+			objectStoreRequest.onsuccess = function(event) {
+				console.log('report the success of our request')
+			}
+			objectStoreRequest.onerror = function(event) {
+				console.log(transaction.error)
 			}
 		})
 	},
+
+	/* delete */
+	
+	
 	async deleteOrder(order) {
 		let db = await this.getDb()
 		return new Promise(resolve => {
@@ -63,29 +84,6 @@ export default {
 			let store = trans.objectStore('orders')			
 			store.delete(order.uid)
 			console.log('end of delete')
-		})
-	},
-	async deleteOrders() {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['orders'],'readwrite')
-			trans.oncomplete = () => {
-				resolve()
-			}
-			let store = trans.objectStore('orders')			
-			store.clear()
-			console.log('removed all orders')
-		})
-	},
-	async removeAll () {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['cats'],'readwrite')
-			trans.oncomplete = () => {
-				resolve()
-			}
-			let store = trans.objectStore('cats')
-			store.clear()
 		})
 	},
 	async deleteData(x) {
@@ -181,22 +179,6 @@ export default {
 			}
 		})
 	},
-	/*
-	async getItems(table, obj, i, index) {
-		let db = await this.getDb()
-		let trans = db.transaction([table], 'readonly')
-		trans.oncomplete = () => {
-			resolve(temp)
-		}
-		let store = trans.objectStore(table)
-		if(arguments[2]) {
-			let myIndex = store.index(index)
-			let getRequest = myIndex.get(id)
-		}
-		let myIndex = store.index('id_order')
-
-	}
-	*/
 
 	/* add records */
 	

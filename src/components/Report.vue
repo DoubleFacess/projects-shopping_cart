@@ -170,7 +170,7 @@ export default {
     async deleteOrder(order){
       //console.log(order)
       if (confirm('With this action you remove all entries for this order, you wish continue?')) {
-        this.$store.dispatch('deleteOrder', order)
+        this.$store.dispatch('myDeleteItem', order)
         this.$store.dispatch('getOrders')
       } else {
         // false
@@ -179,7 +179,7 @@ export default {
     async deleteAllOrders(){
       //console.log(order)
       if (confirm('With this action you remove all orders in the DB, you wish continue?')) {
-        this.$store.dispatch('removeOrders')
+        this.$store.dispatch('clearTable', {'table' : 'orders'})
         this.$store.dispatch('getOrders')
       } else {
         // false

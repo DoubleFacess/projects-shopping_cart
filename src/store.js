@@ -19,6 +19,32 @@ export default new Vuex.Store({
   },
   actions: {
 
+    /* new */
+
+    async clearTable(context, payload) {
+      await idb.clearTable(payload.table)
+      if(payload.table === 'cats') {
+        console.log('control for state context change')
+        return context.state.items = []
+      } else if (payload.table === 'orders') {
+        return context.state.orders = []
+      }      
+    },
+    async myDeleteItem(dispatch, payload) {
+      let id, table
+      if(payload.id) {
+        id = payload.id
+        table = 'cats'
+      } else if(payload.uid) {
+        id = payload.uid
+        table = 'orders'
+      }
+      console.log('store is being asked to delete ' + id)
+      await idb.myDeleteItem(table, id)
+    },
+
+    //clearTable
+
     /* delete */
 
     async deleteItem(dispatch, payload) {
@@ -26,20 +52,11 @@ export default new Vuex.Store({
       await idb.deleteData(payload._id)
     },
     async deleteOrder(context, order) {
-      console.log('store is being asked to delete ' + order.uid)
+      //console.log('store is being asked to delete ' + order.uid)
       await idb.deleteOrder(order)
     },
-    async removeAll(context) {
-      await idb.removeAll()
-      return context.state.items = []
-    },
-    async removeOrders(context) {
-      await idb.deleteOrders()
-      .then(
-        alert('Orders remvoed succefully')
-      )
-      return context.state.orders = []
-    },
+    
+    
 
     /* get */
 

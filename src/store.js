@@ -32,8 +32,8 @@ export default new Vuex.Store({
     },
     async myDeleteItem(dispatch, payload) {
       let id, table
-      if(payload.id) {
-        id = payload.id
+      if(payload._id) {
+        id = payload._id
         table = 'cats'
       } else if(payload.uid) {
         id = payload.uid
@@ -43,34 +43,15 @@ export default new Vuex.Store({
       await idb.myDeleteItem(table, id)
     },
 
-    //clearTable
-
-    /* delete */
-
-    async deleteItem(dispatch, payload) {
-      console.log('store is being asked to delete ' + payload._id)
-      await idb.deleteData(payload._id)
-    },
-    async deleteOrder(context, order) {
-      //console.log('store is being asked to delete ' + order.uid)
-      await idb.deleteOrder(order)
-    },
-    
-    
 
     /* get */
-
-    async getItem(context, cat) {
-      let result = await idb.read(cat)
-      console.log(result)
-
-    },
+    
     async emptyStoreDetails(context) {
       context.state.details = []
     },
     async getItems(context) {
       context.state.items = []
-      let items = await idb.getItems()
+      let items = await idb.myGetItems('cats')
       items.forEach(c => {
         context.state.items.push(c)
       })
@@ -78,7 +59,7 @@ export default new Vuex.Store({
     async getOrders(context) {
       //console.log('orders action')
       context.state.orders = []
-      let orders = await idb.getOrders()      
+      let orders = await idb.myGetItems('orders')      
       context.state.orders = orders
     },
     async getOrderDetail(context, order) {
@@ -86,21 +67,20 @@ export default new Vuex.Store({
       let details = await idb.getOrderDetail(order)
       details.forEach(c => {
         context.state.details.push(c)
-        console.log('try is ok')
       })
     },
 
     /* add */
 
     async saveItem(context, cat) {
-      await idb.saveItem(cat);
+      await idb.mySaveItem('cats', cat)
     }, 
     async saveOrderDetails(context, order) {
-      console.log('new action')
-      await idb.saveOrderDetails(order);
+      //console.log('new action')
+      await idb.mySaveItem('orders_details', order)
     },
     async saveOrder(context, order) {
-      await idb.saveOrder(order);
+      await idb.mySaveItem('orders', order)
     }, 
     
     async update(context, payload) {

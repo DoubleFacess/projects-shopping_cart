@@ -53,7 +53,7 @@
                           outlined
                           :value="i[0].qty"
                           type="number"
-                          v-on:click="greet(i[0])"
+                          v-on:click="updateQuantity(i[0])"
                         ></v-text-field>
                       </td>
                       <!--<td class="text-center">${{ _numberObjs(i) *  i[0].price }}</td>-->
@@ -65,8 +65,15 @@
                           type="text"
                         ></v-text-field>
                       </td>
-                      <td class="text-center" ><a @click="deleteItem(i[0])">X</a></td>
-                      </tr>              
+                      <td class="text-center" >
+                        <v-btn
+                          color="red"
+                          x-small
+                          dark
+                          @click="deleteItem(i[0])"
+                        >Delete</v-btn>
+                      </td>
+                    </tr>              
                   </tbody>
                 </template>
               </v-simple-table>
@@ -362,17 +369,17 @@ export default {
         'date': my_date,
         'order_amount': amount
       })
-      this.$store.dispatch('clearTable', {'table': 'cats', 'msg': 'entries'})
+      this.$store.dispatch('clearTable', {'table': 'cats'})
       this.$router.push('/report')
     },
-    greet: function (x) {
+    updateQuantity: function (x) {
       console.log(event)
       console.log(event.target)
       if (event) {
         //alert(event.target.value)
         if(event.target.value == 0) {
           if (confirm('With this action you delete the item, you wish continue?')) {
-            this.$store.dispatch('deleteItem', x)
+            this.$store.dispatch('myDeleteItem', x)
             this.$store.dispatch('getItems')
           } else {
             // false
@@ -392,7 +399,7 @@ export default {
     },
     deleteAll: function() {
       if (confirm('With this action you delete all items in the store, you wish continue?')) {
-        this.$store.dispatch('clearTable', {'table' : 'cats', 'msg': 'entries'})
+        this.$store.dispatch('clearTable', {'table' : 'cats'})
         this.$route.push('/')
       } else {
             // false

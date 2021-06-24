@@ -70,84 +70,23 @@ export default {
 		})
 	},
 
-	/* delete */
-	
-	
-	async deleteOrder(order) {
+	async myGetItems(table) { //'cats' and 'orders'
 		let db = await this.getDb()
 		return new Promise(resolve => {
-			let empty = []
-			let trans = db.transaction(['orders'],'readwrite')
+			let trans = db.transaction([table], 'readonly')
 			trans.oncomplete = () => {
-				resolve(empty)
-			}
-			let store = trans.objectStore('orders')			
-			store.delete(order.uid)
-			console.log('end of delete')
-		})
-	},
-	async deleteData(x) {
-		let db = await this.getDb()
-		console.log('into idb fx')
-		console.log(x)
-		return new Promise(resolve => {
-			let transaction = db.transaction(['cats'],'readwrite')
-			transaction.oncomplete = () => {
-				resolve('Transaction completed')
-				//resolve()
-			}
-			transaction.onerror = function(event) {
-				console.log(transaction.error)
-			} 
-			// create an object store on the transaction
-			var objectStore = transaction.objectStore("cats")
-			var objectStoreRequest = objectStore.delete(x)
-			objectStoreRequest.onsuccess = function(event) {
-				console.log('report the success of our request')
-			}
-			objectStoreRequest.onerror = function(event) {
-				console.log(transaction.error)
-			}
-		})
-	},
-	/* get records */
-
-	async getItems() {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['cats'],'readonly')
-			trans.oncomplete = () => {
-				resolve(cats)
+				resolve(items)
 			}			
-			let store = trans.objectStore('cats')
-			let cats = []			
+			let store = trans.objectStore(table)
+			let items = []			
 			store.openCursor().onsuccess = e => {
 				let cursor = e.target.result
 				if (cursor) {
-					cats.push(cursor.value)
+					items.push(cursor.value)
 					cursor.continue()
 				}
 			}
-
-		})
-	},
-	async getOrders() {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['orders'], 'readonly')
-			trans.oncomplete = () => {
-				resolve(orders)
-			}			
-			let store = trans.objectStore('orders')
-			let orders = []			
-			store.openCursor().onsuccess = e => {
-				let cursor = e.target.result
-				if (cursor) {
-					cursor.continue()
-					orders.push(cursor.value)
-				}
-			}
-
+			//console.log('new idb callback')
 		})
 	},
 
@@ -164,8 +103,8 @@ export default {
   			var getKeyRequest = myIndex.getKey(order.uid)
 			let getRequest = myIndex.get(order.uid)
 			getRequest.onsuccess = function() {
-				console.log(getKeyRequest.result)
-				console.log('uhm')
+				//console.log(getKeyRequest.result)
+				//console.log('uhm')
 			}
 			let details = []
 			myIndex.openCursor(keyRangeValue).onsuccess = function(event) {
@@ -176,45 +115,29 @@ export default {
 				} else {
 				  //console.log('Entries all displayed.')
 				}
+				//console.log('end of get Details')
 			}
 		})
 	},
 
+
 	/* add records */
+
+	async mySaveItem(table, obj) {
+		console.log('new transaction')
+		let db = await this.getDb()
+		return new Promise(resolve => {
+			let trans = db.transaction([table], 'readwrite');
+			trans.oncomplete = () => {
+				resolve()
+			}
+			let store = trans.objectStore(table)
+			store.put(obj)
+			console.log('endo of new transaction')
+		})	
+	},
 	
-	async saveItem(cat) {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['cats'],'readwrite');
-			trans.oncomplete = () => {
-				resolve()
-			}
-			let store = trans.objectStore('cats')
-			store.put(cat)
-		})	
-	},
-	async saveOrderDetails(order) {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['orders_details'], 'readwrite')
-			trans.oncomplete = () => {
-				resolve()
-			}
-			let store = trans.objectStore('orders_details')
-			store.put(order)
-		})	
-	},
-	async saveOrder(order) {
-		let db = await this.getDb()
-		return new Promise(resolve => {
-			let trans = db.transaction(['orders'], 'readwrite')
-			trans.oncomplete = () => {
-				resolve()
-			}
-			let store = trans.objectStore('orders')
-			store.put(order)
-		})
-	},
+	
 
 	/* update records */
 	
